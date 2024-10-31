@@ -7,6 +7,7 @@ import org.scu301.remoteserver.entity.Member;
 import org.scu301.remoteserver.repository.AccountRepository;
 import org.scu301.remoteserver.security.Argon2Utils;
 import org.scu301.remoteserver.util.Pair;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -47,12 +48,13 @@ public class AccountService {
         return true;
     }
 
+//    @Cacheable(value = "accounts", key = "#accountId")
     public Optional<Account> getAccount(int accountId) {
         return accountRepository.findById(accountId);
     }
 
     public Set<Member> getMembers(int accountId) {
-        return getAccount(accountId).map(Account::getMembers).orElse(new HashSet<>());
+        return getAccount(accountId).map(Account::getMembers).orElse(new LinkedHashSet<>());
     }
 
     public List<House> getHouses(int accountId) {

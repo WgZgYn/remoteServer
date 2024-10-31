@@ -1,9 +1,11 @@
 package org.scu301.remoteserver;
 
 import org.junit.jupiter.api.Test;
+import org.scu301.remoteserver.dto.AccountDevices;
 import org.scu301.remoteserver.entity.Device;
 import org.scu301.remoteserver.entity.House;
 import org.scu301.remoteserver.repository.*;
+import org.scu301.remoteserver.service.DeviceDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -23,6 +25,8 @@ class RemoteServerApplicationTests {
     private HouseRepository houseRepository;
     @Autowired
     private DeviceControlRepository deviceControlRepository;
+    @Autowired
+    private DeviceDataService deviceDataService;
 
 	@Test
 	void testDeviceRepository() {
@@ -57,5 +61,20 @@ class RemoteServerApplicationTests {
 	@Test
 	void testMemberRepository() {
 		memberRepository.findMembersByAccountId(3).forEach(member -> System.out.println(member.getId()));
+	}
+
+
+
+
+
+
+
+
+
+
+	@Test
+	void getAllDevicesControl() {
+		AccountDevices accountDevices = deviceDataService.getHousesDevices(3).get();
+		System.out.println(accountDevices);
 	}
 }

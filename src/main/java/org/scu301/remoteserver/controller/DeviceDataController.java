@@ -1,33 +1,33 @@
 package org.scu301.remoteserver.controller;
 
 import io.jsonwebtoken.JwtException;
+import org.scu301.remoteserver.dto.AccountDevices;
 import org.scu301.remoteserver.entity.House;
 import org.scu301.remoteserver.security.Claims;
-import org.scu301.remoteserver.service.DeviceService;
+import org.scu301.remoteserver.service.DeviceDataService;
 import org.scu301.remoteserver.service.HouseAreaService;
 import org.scu301.remoteserver.util.Response;
 import org.scu301.remoteserver.util.Result;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/my")
 public class DeviceDataController {
-    DeviceService deviceService;
+    DeviceDataService deviceService;
     HouseAreaService houseAreaService;
 
-    DeviceDataController(DeviceService deviceService, HouseAreaService houseAreaService) {
+    DeviceDataController(DeviceDataService deviceService, HouseAreaService houseAreaService) {
         this.deviceService = deviceService;
         this.houseAreaService = houseAreaService;
     }
 
     @GetMapping("/device")
-    Result getHousesDevice(@RequestAttribute("claims") Claims claims) {
-        try {
-            return Response.ok(deviceService.getHousesDevices(claims.id()));
-        } catch (JwtException e) {
-            return Response.err(e.getMessage());
-        }
+    Response<AccountDevices> getHousesDevice(@RequestAttribute("claims") Claims claims) {
+        Optional<AccountDevices> ok = deviceService.getHousesDevices(claims.id());
+        return ok.map(Response::ok).orElseGet(() -> Response.ok(AccountDevices.none()));
     }
 
     @GetMapping("/area")

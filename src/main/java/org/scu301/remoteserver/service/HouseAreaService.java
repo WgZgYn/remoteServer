@@ -60,8 +60,4 @@ public class HouseAreaService {
         log.info("add area {} by user {} to house {}", areaName, accountId, house_id);
         return true;
     }
-
-//    public List<Device> getAreaDevices(int accountId, int houseId, int areaId) {
-//
-//    }
 }

@@ -1,5 +1,6 @@
 package org.scu301.remoteserver.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.scu301.remoteserver.dto.LoginRequest;
 import org.scu301.remoteserver.dto.LoginResponse;
 import org.scu301.remoteserver.dto.SignupRequest;
@@ -12,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
+import java.time.Instant;
+
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class AccountController {
@@ -25,10 +30,13 @@ public class AccountController {
 
     @PostMapping("/login")
     Result login(@RequestBody LoginRequest request) {
+        Instant now = Instant.now();
         try {
             LoginResponse ok = authAccountService.authenticate(request.username(), request.password());
+            log.info("{}", Duration.between(now, Instant.now()));
             return Response.ok(ok);
         } catch (AuthAccountService.AuthError e) {
+            log.info("{}", Duration.between(now, Instant.now()));
             return Response.err(e.getMessage());
         }
     }
