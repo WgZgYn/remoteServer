@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findMembersByAccountId(Integer accountId);
+    boolean existsByAccountIdAndHouseId(Integer accountId, Integer houseId);
 }

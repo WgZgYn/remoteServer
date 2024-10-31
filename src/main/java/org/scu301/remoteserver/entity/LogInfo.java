@@ -23,7 +23,7 @@ public class LogInfo {
     @Column(name = "\"time\"", nullable = false)
     private Instant time;
 
-    @Column(name = "action")
-    private String action;
+    @Column(name = "message")
+    private String message;
 
 }

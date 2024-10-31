@@ -1,10 +1,8 @@
 package org.scu301.remoteserver;
 
 import org.junit.jupiter.api.Test;
-import org.scu301.remoteserver.entity.Account;
 import org.scu301.remoteserver.entity.Device;
 import org.scu301.remoteserver.entity.House;
-import org.scu301.remoteserver.entity.Member;
 import org.scu301.remoteserver.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +21,8 @@ class RemoteServerApplicationTests {
 	AreaRepository areaRepository;
     @Autowired
     private HouseRepository houseRepository;
+    @Autowired
+    private DeviceControlRepository deviceControlRepository;
 
 	@Test
 	void testDeviceRepository() {
@@ -33,15 +33,9 @@ class RemoteServerApplicationTests {
 	}
 
 	@Test
-	void testAreaRepository() {
-
+	void testDeviceControlRepository() {
+		deviceControlRepository.findAll().forEach(control -> System.out.println(control.getParameter().toString()));
 	}
-
-//
-//	@Test
-//	void testAccountRepository2() {
-//		accountRepository.findById(3).get().getMembers().forEach(System.out::println);
-//	}
 
 	@Test
 	void testAccountRepository() {

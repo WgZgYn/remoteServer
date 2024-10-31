@@ -19,10 +19,6 @@ public class DeviceControl {
     @Column(name = "device_control_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "device_type_id", nullable = false)
-    private DeviceType deviceType;
-
     @Column(name = "label", nullable = false)
     private String label;
 
@@ -33,4 +29,8 @@ public class DeviceControl {
     @Column(name = "parameter")
     @JdbcTypeCode(SqlTypes.JSON)
     private Map<String, Object> parameter;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "device_id")
+    private Device device;
 }

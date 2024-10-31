@@ -9,17 +9,14 @@ import org.scu301.remoteserver.util.Response;
 import org.scu301.remoteserver.util.Result;
 import org.springframework.web.bind.annotation.*;
 
-/*
-TODO: 自定义拦截器，简化代码重复
- */
 
 @RestController
 @RequestMapping("/api/my")
-public class DeviceController {
+public class DeviceDataController {
     DeviceService deviceService;
     HouseAreaService houseAreaService;
 
-    DeviceController(DeviceService deviceService, HouseAreaService houseAreaService) {
+    DeviceDataController(DeviceService deviceService, HouseAreaService houseAreaService) {
         this.deviceService = deviceService;
         this.houseAreaService = houseAreaService;
     }
@@ -27,7 +24,7 @@ public class DeviceController {
     @GetMapping("/device")
     Result getHousesDevice(@RequestAttribute("claims") Claims claims) {
         try {
-            return Response.ok(deviceService.getDevices(claims.id()));
+            return Response.ok(deviceService.getHousesDevices(claims.id()));
         } catch (JwtException e) {
             return Response.err(e.getMessage());
         }
@@ -39,28 +36,22 @@ public class DeviceController {
     }
 
     @GetMapping("/area/{id}")
-    Result getAreaDevices(@RequestAttribute("claims") Claims claims, @PathVariable String id) {
-        return Response.ok();
+    Result listAreaDevices(@RequestAttribute("claims") Claims claims, @PathVariable String id) {
+        return Response.ok(houseAreaService.getHouses(claims.id()).stream());
     }
 
     @GetMapping("/house")
-    Result listHouses(@RequestHeader(value = "Authorization") String authHeader) {
+    Result listHouses(@RequestAttribute("claims") Claims claims) {
         return Response.ok();
     }
 
     @GetMapping("/house/{id}")
-    Result getHouseDevices(@RequestHeader(value = "Authorization") String authHeader, @PathVariable String id) {
+    Result listHouseDevices(@RequestAttribute("claims") Claims claims, @PathVariable String id) {
         return Response.ok();
     }
 
-
-    @GetMapping("/house/{house_id}/area/{area_id}")
-    Result house(@RequestHeader(value = "Authorization") String authHeader, @PathVariable String house_id, @PathVariable String area_id) {
-        return Response.ok();
-    }
-
-    @GetMapping("/family")
-    Result family(@RequestHeader(value = "Authorization") String authHeader) {
+    @GetMapping("/member")
+    Result listHouseMember(@RequestAttribute("claims") Claims claims) {
         return Response.ok();
     }
 }

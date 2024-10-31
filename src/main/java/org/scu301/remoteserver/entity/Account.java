@@ -6,8 +6,8 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 
 @Getter
@@ -49,6 +49,12 @@ public class Account {
     @Column(name = "role", columnDefinition = "account_role not null")
     private String role;
 
-    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Member> members = new ArrayList<>(); // 用于关联 Member
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<Member> members = new LinkedHashSet<>();
+
+    @OneToOne(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private UserInfo userInfo;
+
+//    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    private List<Member> members = new ArrayList<>(); // 用于关联 Member
 }

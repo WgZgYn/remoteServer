@@ -6,6 +6,8 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.Instant;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -41,4 +43,16 @@ public class Device {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "created_by")
     private Account createdBy;
+
+    @OneToMany(mappedBy = "device", fetch = FetchType.EAGER)
+    private Set<DeviceControl> deviceControls = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "device", fetch = FetchType.EAGER)
+    private Set<DeviceEvent> deviceEvents = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "subscriber", fetch = FetchType.EAGER)
+    private Set<Subscribe> subscribes = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "device", fetch = FetchType.EAGER)
+    private Set<DeviceService> deviceServices = new LinkedHashSet<>();
 }

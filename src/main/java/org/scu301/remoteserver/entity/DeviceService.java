@@ -10,11 +10,12 @@ import lombok.Setter;
 @Table(name = "device_service")
 public class DeviceService {
     @Id
-    @Column(name = "device_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "device_service_id_gen")
+    @SequenceGenerator(name = "device_service_id_gen", sequenceName = "device_service_device_service_id_seq", allocationSize = 1)
+    @Column(name = "device_service_id", nullable = false)
     private Integer id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "device_id", nullable = false)
     private Device device;
 

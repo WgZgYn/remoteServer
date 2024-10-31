@@ -9,9 +9,7 @@ import org.scu301.remoteserver.security.Argon2Utils;
 import org.scu301.remoteserver.util.Pair;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -53,8 +51,8 @@ public class AccountService {
         return accountRepository.findById(accountId);
     }
 
-    public List<Member> getMembers(int accountId) {
-        return getAccount(accountId).map(Account::getMembers).orElse(new ArrayList<>());
+    public Set<Member> getMembers(int accountId) {
+        return getAccount(accountId).map(Account::getMembers).orElse(new HashSet<>());
     }
 
     public List<House> getHouses(int accountId) {
