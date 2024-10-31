@@ -7,7 +7,6 @@ import org.scu301.remoteserver.service.AccountService;
 import org.scu301.remoteserver.service.AuthAccountService;
 import org.scu301.remoteserver.util.Response;
 import org.scu301.remoteserver.util.Result;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;

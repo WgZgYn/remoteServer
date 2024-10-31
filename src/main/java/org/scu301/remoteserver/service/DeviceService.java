@@ -1,7 +1,7 @@
 package org.scu301.remoteserver.service;
 
 import org.scu301.remoteserver.dto.AccountDevices;
-import org.scu301.remoteserver.repository.*;
+import org.scu301.remoteserver.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

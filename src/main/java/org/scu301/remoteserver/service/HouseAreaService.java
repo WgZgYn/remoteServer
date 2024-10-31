@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.scu301.remoteserver.entity.Account;
 import org.scu301.remoteserver.entity.Area;
 import org.scu301.remoteserver.entity.House;
-
 import org.scu301.remoteserver.repository.AccountRepository;
 import org.scu301.remoteserver.repository.AreaRepository;
 import org.scu301.remoteserver.repository.HouseRepository;

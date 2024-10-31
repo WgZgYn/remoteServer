@@ -3,7 +3,6 @@ package org.scu301.remoteserver.controller;
 import io.jsonwebtoken.JwtException;
 import org.scu301.remoteserver.entity.House;
 import org.scu301.remoteserver.security.Claims;
-import org.scu301.remoteserver.security.JwtUtils;
 import org.scu301.remoteserver.service.DeviceService;
 import org.scu301.remoteserver.service.HouseAreaService;
 import org.scu301.remoteserver.util.Response;
