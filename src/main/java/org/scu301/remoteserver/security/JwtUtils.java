@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class JwtUtils {
     private static final long EXP_HOURS = 2L;
-    private static final SecretKey secretKey =  Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private static final SecretKey secretKey =  Keys.hmacShaKeyFor("1145141919810-301a301a-scu-wzy-dj-th-wdz".getBytes());
 
     private JwtUtils() {}
 
