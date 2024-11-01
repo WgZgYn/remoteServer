@@ -1,6 +1,6 @@
-GET localhost/test/ping
+GET localhost:8088/test/ping
 ###
-POST localhost/api/login
+POST localhost:8088/api/login
 Content-Type: application/json
 
 {
@@ -8,8 +8,18 @@ Content-Type: application/json
   "password": "123456"
 }
 ###
-GET localhost/api/my/device
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwNDI5NzQxLCJleHAiOjE3MzA0MzY5NDEsInJvbGUiOiJhZG1pbiJ9.RHd7uVMpAAkCsfwPa9ySaewp0hOTV7Hxx6PuRP9pIoQ
+GET localhost:8088/api/my/device
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwNDcxNzUzLCJleHAiOjE3MzA0Nzg5NTMsInJvbGUiOiJhZG1pbiJ9.KXcJk14mxIM-d3k5GMLZ_IXATaaR1Yh_UY4hHv2pJww
+###
+GET localhost:8088/api/my/device/4/switch
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwNDcxNzUzLCJleHAiOjE3MzA0Nzg5NTMsInJvbGUiOiJhZG1pbiJ9.KXcJk14mxIM-d3k5GMLZ_IXATaaR1Yh_UY4hHv2pJww
+###
+GET localhost:8088/api/sse
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwNDcxNzUzLCJleHAiOjE3MzA0Nzg5NTMsInJvbGUiOiJhZG1pbiJ9.KXcJk14mxIM-d3k5GMLZ_IXATaaR1Yh_UY4hHv2pJww
+
+
+
+
 ###
 POST 47.108.27.238:80/api/login
 Content-Type: application/json
@@ -21,3 +31,32 @@ Content-Type: application/json
 ###
 GET 47.108.27.238:80/api/my/device
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6Mywic3ViIjoid3p5Iiwicm9sZSI6InVzZXIiLCJleHAiOjE3MzAzOTI2NDJ9.gZc_N4gTn9TFtN4FsN_HgTxXZzBBmoR2yPwaE5hx-T4
+
+
+
+
+
+###
+POST 47.108.27.238:8088/api/login
+Content-Type: application/json
+
+{
+  "username": "wzy",
+  "password": "123456"
+}
+###
+GET 47.108.27.238:8088/test/ping
+###
+GET 47.108.27.238:8088/api/my/device
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwNDQ1MTc1LCJleHAiOjE3MzA0NTIzNzUsInJvbGUiOiJhZG1pbiJ9.MoGyyfZ-IhQi3F0dSLimiafvIUmsuOS6sM-0eStrBS0
+###
+GET 47.108.27.238:8088/api/my/device/4/switch
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwNDQ1MTc1LCJleHAiOjE3MzA0NTIzNzUsInJvbGUiOiJhZG1pbiJ9.MoGyyfZ-IhQi3F0dSLimiafvIUmsuOS6sM-0eStrBS0
+###
+POST 47.108.27.238:80/api/login
+Content-Type: application/json
+
+{
+  "username": "wzy",
+  "password": "123456"
+}
