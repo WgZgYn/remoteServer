@@ -11,6 +11,7 @@ import java.time.Duration;
 @RestController
 @RequestMapping("/api")
 public class SseController {
+    //
     @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> sse() {
         return Flux.interval(Duration.ofSeconds(5))
