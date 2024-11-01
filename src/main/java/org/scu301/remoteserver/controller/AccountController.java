@@ -4,14 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.scu301.remoteserver.dto.LoginRequest;
 import org.scu301.remoteserver.dto.LoginResponse;
 import org.scu301.remoteserver.dto.SignupRequest;
+import org.scu301.remoteserver.security.Claims;
 import org.scu301.remoteserver.service.AccountService;
 import org.scu301.remoteserver.service.AuthAccountService;
 import org.scu301.remoteserver.util.Response;
 import org.scu301.remoteserver.util.Result;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -45,5 +43,10 @@ public class AccountController {
     Result signup(@RequestBody SignupRequest request) {
         boolean ok = accountService.addAccount(request.username(), request.password());
         return ok ? Result.ok() : Result.err("User already exists");
+    }
+
+    @PostMapping("/auth")
+    Result auth(@RequestAttribute("claims") Claims claims) {
+        return Result.ok();
     }
 }
