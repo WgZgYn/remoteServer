@@ -49,11 +49,11 @@ public class Account {
     @Column(name = "role", columnDefinition = "account_role not null")
     private String role;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Member> members = new LinkedHashSet<>();
 
-    @OneToOne(mappedBy = "account", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private UserInfo userInfo;
+//    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+//    private UserInfo userInfo;
 
 //    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 //    private List<Member> members = new ArrayList<>(); // 用于关联 Member

@@ -18,14 +18,14 @@ public class DeviceEvent {
     @Column(name = "event_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "device_id")
     private Device device;
 
     @Column(name = "event_message")
     private String eventMessage;
 
-    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private Set<Subscribe> subscribes = new LinkedHashSet<>();
 
 }

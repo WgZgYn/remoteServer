@@ -30,7 +30,7 @@ public class DeviceControl {
     @JdbcTypeCode(SqlTypes.JSON)
     private Map<String, Object> parameter;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "device_id")
     private Device device;
 }

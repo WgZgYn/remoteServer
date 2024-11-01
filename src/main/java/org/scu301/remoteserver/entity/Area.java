@@ -25,14 +25,14 @@ public class Area {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private Account createdBy;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "house_id", nullable = false)
     private House house;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "area", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "area", cascade = CascadeType.ALL)
     private List<Device> devices;
 }

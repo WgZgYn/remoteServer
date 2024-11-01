@@ -15,7 +15,7 @@ public class DeviceService {
     @Column(name = "device_service_id", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "device_id", nullable = false)
     private Device device;
 

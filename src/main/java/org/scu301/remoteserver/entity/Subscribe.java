@@ -19,7 +19,7 @@ public class Subscribe {
     @JoinColumn(name = "event", nullable = false)
     private DeviceEvent event;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "subscriber", nullable = false)
     private Device subscriber;
 

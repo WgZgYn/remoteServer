@@ -9,7 +9,7 @@ Content-Type: application/json
 }
 ###
 GET localhost/api/my/device
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwMzg1NDEwLCJleHAiOjE3MzAzOTI2MTAsInJvbGUiOiJhZG1pbiJ9.900zAasa84JZdfqjbWV1WKcMtCC-MRmj-jEGfQOFWdw
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwNDI5NzQxLCJleHAiOjE3MzA0MzY5NDEsInJvbGUiOiJhZG1pbiJ9.RHd7uVMpAAkCsfwPa9ySaewp0hOTV7Hxx6PuRP9pIoQ
 ###
 POST 47.108.27.238:80/api/login
 Content-Type: application/json

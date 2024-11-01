@@ -32,7 +32,7 @@ public class Device {
     @JoinColumn(name = "type_id")
     private DeviceType type;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "area_id")
     private Area area;
 
@@ -40,19 +40,19 @@ public class Device {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by")
     private Account createdBy;
 
-    @OneToMany(mappedBy = "device", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
     private Set<DeviceControl> deviceControls = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "device", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
+    private Set<DeviceService> deviceServices = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
     private Set<DeviceEvent> deviceEvents = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "subscriber", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "subscriber", fetch = FetchType.LAZY)
     private Set<Subscribe> subscribes = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "device", fetch = FetchType.EAGER)
-    private Set<DeviceService> deviceServices = new LinkedHashSet<>();
 }
