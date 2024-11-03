@@ -25,4 +25,8 @@ public class Result {
     public static Result err(int code, String message) {
         return new Result(code, message);
     }
+
+    public static Result err(){
+        return new Result(500, "failed");
+    }
 }
