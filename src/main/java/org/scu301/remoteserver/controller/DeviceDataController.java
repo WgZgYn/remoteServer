@@ -1,6 +1,5 @@
 package org.scu301.remoteserver.controller;
 
-import io.jsonwebtoken.JwtException;
 import org.scu301.remoteserver.dto.AccountDevices;
 import org.scu301.remoteserver.entity.House;
 import org.scu301.remoteserver.security.Claims;
