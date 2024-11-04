@@ -1,8 +1,10 @@
 package org.scu301.remoteserver.controller;
 
+
 import org.scu301.remoteserver.dto.*;
 import org.scu301.remoteserver.entity.Account;
 import org.scu301.remoteserver.entity.Area;
+
 import org.scu301.remoteserver.entity.House;
 import org.scu301.remoteserver.entity.Member;
 import org.scu301.remoteserver.repository.AccountRepository;
@@ -29,11 +31,23 @@ public class DeviceDataController {
         this.accountRepository = accountRepository;
     }
 
+// Need to be fixed
+//     @GetMapping("/area")
+//     Result listAreas(@RequestAttribute("claims") Claims claims) {
+//         return Response.ok(houseAreaService.getHouses(claims.id()).stream().map(House::getAreas));
+//     }
+
     @GetMapping("/area")
     Result listAreas(@RequestAttribute("claims") Claims claims) {
         List<Area> areas = houseAreaService.getAllAreas(claims.id());
         return Response.of(areas.stream().map(AreaInfo::of));
     }
+
+// Need to be fixed
+//     @GetMapping("/house")
+//     Result listHouses(@RequestAttribute("claims") Claims claims) {
+//         return Response.ok(houseAreaService.getHouses(claims.id()));
+//     }
 
     @GetMapping("/house")
     Result listHouses(@RequestAttribute("claims") Claims claims) {
@@ -51,6 +65,18 @@ public class DeviceDataController {
         return Response.of(new ArrayList<>());
     }
 
+// Need to be fixed
+//     @GetMapping("/area/{id}")
+//     Result listAreaDevices(@RequestAttribute("claims") Claims claims, @PathVariable String id) {
+//         try {
+//             int areaId = Integer.parseInt(id);
+//             Optional<AreaDevices> devices = deviceService.getAreaDevices(claims.id(), areaId);
+//             return devices.map(Response::ok).orElseGet(() -> Response.ok(null));
+//         } catch (Exception e) {
+//             return Response.err();
+//         }
+//     }
+
     @GetMapping("/area/{id}")
     Result getAreaDevices(@RequestAttribute("claims") Claims claims, @PathVariable Integer id) {
         List<Area> areas = houseAreaService.getAllAreas(claims.id());
@@ -61,6 +87,18 @@ public class DeviceDataController {
         }
         return Result.err("no such area");
     }
+
+//  Need to be fixed
+//     @GetMapping("/house/{id}")
+//     Result listHouseDevices(@RequestAttribute("claims") Claims claims, @PathVariable String id) {
+//         try {
+//             int houseId = Integer.parseInt(id);
+//             Optional<HouseDevices> devices = deviceService.getHouseDevices(claims.id(), houseId);
+//             return devices.map(Response::ok).orElseGet(() -> Response.ok(null));
+//         } catch (Exception e) {
+//             return Result.err();
+//         }
+//     }
 
     @GetMapping("/house/{id}")
     Result getHouseDevices(@RequestAttribute("claims") Claims claims, @PathVariable Integer id) {
@@ -78,5 +116,4 @@ public class DeviceDataController {
         Optional<AccountDevices> ok = deviceService.getHousesDevices(claims.id());
         return ok.map(Response::of).orElseGet(() -> Response.of(AccountDevices.none()));
     }
-
 }
