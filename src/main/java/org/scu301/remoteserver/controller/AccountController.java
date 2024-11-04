@@ -32,7 +32,7 @@ public class AccountController {
         try {
             LoginResponse ok = authAccountService.authenticate(request.username(), request.password());
             log.info("{}", Duration.between(now, Instant.now()));
-            return Response.ok(ok);
+            return Response.of(ok);
         } catch (AuthAccountService.AuthError e) {
             log.info("{}", Duration.between(now, Instant.now()));
             return Response.err(e.getMessage());
