@@ -19,7 +19,7 @@ import java.util.*;
 public class DeviceStatusMemoryService {
     private final Map<Integer, JsonNode> deviceInnerStatus;
     private final Map<Integer, Deque<String>> eventDeque;
-    private Map<Integer, String> deviceId2Mac;
+    private Map<String, Integer> deviceMac2Id;
     private final DeviceRepository deviceRepository;
     private final MqttClientService mqttClientService;
 
@@ -27,13 +27,13 @@ public class DeviceStatusMemoryService {
     DeviceStatusMemoryService(DeviceRepository deviceRepository, MqttClientService mqttClientService) {
         deviceInnerStatus = new HashMap<>();
         eventDeque = new HashMap<>();
-        deviceId2Mac = new HashMap<>();
+        deviceMac2Id = new HashMap<>();
         this.deviceRepository = deviceRepository;
         this.mqttClientService = mqttClientService;
     }
 
     public boolean isOnline(int deviceId) {
-        return deviceId2Mac.containsKey(deviceId);
+        return deviceMac2Id.containsValue(deviceId);
     }
 
     public void saveStatus(int deviceId, JsonNode deviceStatus) {
@@ -46,7 +46,7 @@ public class DeviceStatusMemoryService {
 
     private void recordIdMac(int deviceId, String mac) {
         log.info("Device online: {}", deviceId);
-        deviceId2Mac.put(deviceId, mac);
+        deviceMac2Id.put(mac, deviceId);
     }
 
     private void recordEvent(int deviceId, String event) {
@@ -55,19 +55,22 @@ public class DeviceStatusMemoryService {
 
     @EventListener
     public void handleDeviceMqttMessage(@NotNull DeviceMqttMessage event) {
-        // TODO: need to be cached
-        Optional<Device> deviceOptional = deviceRepository.findDeviceByEfuseMac(event.getEFuseMac());
-        if (deviceOptional.isEmpty()) {
-            log.info("No device found with EfuseMac: {}", event.getEFuseMac());
-            return;
+        int deviceId;
+        if (deviceMac2Id.containsKey(event.getEFuseMac())) {
+            deviceId = deviceMac2Id.get(event.getEFuseMac());
+        } else {
+            Optional<Device> deviceOptional = deviceRepository.findDeviceByEfuseMac(event.getEFuseMac());
+            if (deviceOptional.isEmpty()) {
+                log.info("No device found with EfuseMac: {}", event.getEFuseMac());
+                return;
+            }
+            Device device = deviceOptional.get();
+            deviceId = device.getId();
         }
-
-        Device device = deviceOptional.get();
-        recordIdMac(device.getId(), event.getEFuseMac());
-
+        recordIdMac(deviceId, event.getEFuseMac());
         switch (event.getType()) {
-            case "status" -> saveStatus(device.getId(), event.getPayload());
-            case "event" -> recordEvent(device.getId(), event.getPayload().asText());
+            case "status" -> saveStatus(deviceId, event.getPayload());
+            case "event" -> recordEvent(deviceId, event.getPayload().asText());
         }
     }
 
@@ -76,12 +79,12 @@ public class DeviceStatusMemoryService {
     @Scheduled(fixedRate = 50000)
     protected void updateStatus() {
         log.info("start schedule to fetch device's status");
-        Map<Integer, String> temp = deviceId2Mac;
-        deviceId2Mac = new HashMap<>();
-        for (Map.Entry<Integer, String> entry : temp.entrySet()) {
-            log.info("update device status: {}", entry.getKey());
+        Map<String, Integer> temp = deviceMac2Id;
+        deviceMac2Id = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : temp.entrySet()) {
+            log.info("update device status: {} {}", entry.getValue(), entry.getKey());
             try {
-                mqttClientService.publish("/device/" + entry.getValue() + "/service", "status");
+                mqttClientService.publish("/device/" + entry.getKey() + "/service", "status");
             } catch (MqttException e) {
                 log.error(e.getMessage());
             }
