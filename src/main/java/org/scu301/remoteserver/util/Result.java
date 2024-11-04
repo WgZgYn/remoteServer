@@ -2,6 +2,8 @@ package org.scu301.remoteserver.util;
 
 import lombok.Data;
 
+import java.util.Optional;
+
 @Data
 public class Result {
     protected int code;
@@ -24,5 +26,14 @@ public class Result {
 
     public static Result err(int code, String message) {
         return new Result(code, message);
+    }
+
+    public static<T> Result of(Optional<T> data) {
+        return Response.ok(data);
+    }
+
+    public static<T> Result of(boolean ok, String elseMessage) {
+        if (ok) return ok();
+        return err(elseMessage);
     }
 }
