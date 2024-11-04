@@ -3,6 +3,7 @@ package org.scu301.remoteserver.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
 import org.scu301.remoteserver.event.events.DeviceMqttMessage;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
@@ -18,13 +19,14 @@ public class MqttClientService {
     MqttClient client;
     MqttConnectOptions options;
     ObjectMapper objectMapper;
-    DeviceStatusMemoryService deviceStatusMemoryService;
+    ApplicationEventPublisher applicationEventPublisher;
 
-    MqttClientService(MqttConnectOptions options, MqttClient client, ObjectMapper objectMapper, DeviceStatusMemoryService deviceStatusMemoryService) {
+
+    MqttClientService(MqttConnectOptions options, MqttClient client, ObjectMapper objectMapper, ApplicationEventPublisher applicationEventPublisher) {
         this.options = options;
         this.client = client;
         this.objectMapper = objectMapper;
-        this.deviceStatusMemoryService = deviceStatusMemoryService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @PostConstruct
@@ -77,7 +79,7 @@ public class MqttClientService {
             log.info("MqttMessage received: topic: {}, {}", topic, mqttMessage);
             try {
                 DeviceMqttMessage msg = objectMapper.readValue(mqttMessage.getPayload(), DeviceMqttMessage.class);
-                deviceStatusMemoryService.handleDeviceMqttMessage(msg);
+                applicationEventPublisher.publishEvent(msg);
             } catch (Exception e) {
                 log.error(e.getMessage());
             }

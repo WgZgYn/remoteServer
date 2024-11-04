@@ -3,9 +3,11 @@ package org.scu301.remoteserver.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.jetbrains.annotations.NotNull;
 import org.scu301.remoteserver.entity.Device;
 import org.scu301.remoteserver.event.events.DeviceMqttMessage;
 import org.scu301.remoteserver.repository.DeviceRepository;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,6 @@ public class DeviceStatusMemoryService {
     private final Map<Integer, JsonNode> deviceInnerStatus;
     private final Map<Integer, Deque<String>> eventDeque;
     private Map<Integer, String> deviceId2Mac;
-
-
     private final DeviceRepository deviceRepository;
     private final MqttClientService mqttClientService;
 
@@ -50,12 +50,11 @@ public class DeviceStatusMemoryService {
     }
 
     private void recordEvent(int deviceId, String event) {
-        eventDeque.getOrDefault(deviceId, new LinkedList<>()).add(event);
+        eventDeque.computeIfAbsent(deviceId, key -> new LinkedList<>()).add(event);
     }
 
-
-
-    public void handleDeviceMqttMessage(DeviceMqttMessage event) {
+    @EventListener
+    public void handleDeviceMqttMessage(@NotNull DeviceMqttMessage event) {
         // TODO: need to be cached
         Optional<Device> deviceOptional = deviceRepository.findDeviceByEfuseMac(event.getEFuseMac());
         if (deviceOptional.isEmpty()) {
