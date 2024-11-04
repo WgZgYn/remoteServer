@@ -26,17 +26,17 @@ public class DeviceDataController {
     @GetMapping("/device")
     Response<AccountDevices> getHousesDevice(@RequestAttribute("claims") Claims claims) {
         Optional<AccountDevices> ok = deviceService.getHousesDevices(claims.id());
-        return ok.map(Response::ok).orElseGet(() -> Response.ok(AccountDevices.none()));
+        return ok.map(Response::of).orElseGet(() -> Response.of(AccountDevices.none()));
     }
 
     @GetMapping("/area")
     Result listAreas(@RequestAttribute("claims") Claims claims) {
-        return Response.ok(houseAreaService.getHouses(claims.id()).stream().map(House::getAreas));
+        return Response.of(houseAreaService.getHouses(claims.id()).stream().map(House::getAreas));
     }
 
     @GetMapping("/area/{id}")
     Result listAreaDevices(@RequestAttribute("claims") Claims claims, @PathVariable String id) {
-        return Response.ok(houseAreaService.getHouses(claims.id()).stream());
+        return Response.of(houseAreaService.getHouses(claims.id()).stream());
     }
 
     @GetMapping("/house")

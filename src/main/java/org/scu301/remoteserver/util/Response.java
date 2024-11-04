@@ -14,7 +14,7 @@ public class Response<T> extends Result {
         this.data = data;
     }
 
-    public static <T> Response<T> ok(T date) {
+    public static <T> Response<T> of(T date) {
         return new Response<>(200, "success", date);
     }
 }

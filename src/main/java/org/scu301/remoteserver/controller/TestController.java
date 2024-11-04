@@ -11,6 +11,6 @@ public class TestController {
 
     @GetMapping("/ping")
     Response<String> ping() {
-        return Response.ok("pong");
+        return Response.of("pong");
     }
 }
