@@ -30,7 +30,6 @@ public class DeviceController {
     Result executeService(@RequestAttribute("claims") Claims claims, @PathVariable int deviceId, @PathVariable String serviceName) {
         int accountId = claims.id();
         // TODO:
-
         return Result.of(deviceControlService.executeService(deviceId, serviceName), "operation failed");
     }
 
@@ -38,7 +37,6 @@ public class DeviceController {
     Result deviceStatus(@RequestAttribute("claims") Claims claims, @PathVariable int deviceId) {
         int accountId = claims.id();
         // TODO:
-
         return Result.of(deviceStatusMemoryService.getStatus(deviceId));
     }
 }
