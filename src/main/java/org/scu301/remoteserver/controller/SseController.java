@@ -1,6 +1,7 @@
 package org.scu301.remoteserver.controller;
 
 import org.scu301.remoteserver.security.Claims;
+import org.scu301.remoteserver.service.SseConnectionService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
@@ -29,21 +30,16 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequestMapping("/api")
 public class SseController {
     // 存储每个用户的 Sink
-    private final ConcurrentHashMap<Integer, Sinks.Many<String>> userSinks = new ConcurrentHashMap<>();
+    SseConnectionService sseConnectionService;
+    SseController(SseConnectionService sseConnectionService) {
+        this.sseConnectionService = sseConnectionService;
+    }
 
     @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamSse(@RequestAttribute("claims") Claims claims) {
         Integer accountId = claims.id();
         // 获取或创建用户的 Sink
-        Sinks.Many<String> sink = userSinks.computeIfAbsent(accountId, key -> Sinks.many().multicast().onBackpressureBuffer());
+        Sinks.Many<String> sink = sseConnectionService.getUserSink(accountId);
         return sink.asFlux();
-    }
-
-    // 发送事件给特定用户
-    public void sendEvent(Integer userId, String event) {
-        Sinks.Many<String> sink = userSinks.get(userId);
-        if (sink != null) {
-            sink.tryEmitNext(event);
-        }
     }
 }
