@@ -43,8 +43,4 @@ public class Result {
         if (ok) return Result.ok();
         return err(elseMessage);
     }
-
-    public static Result err(){
-        return new Result(500, "failed");
-    }
 }
