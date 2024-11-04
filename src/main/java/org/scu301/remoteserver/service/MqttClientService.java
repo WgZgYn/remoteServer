@@ -1,5 +1,8 @@
 package org.scu301.remoteserver.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jetbrains.annotations.NotNull;
+import org.scu301.remoteserver.event.events.DeviceMqttMessage;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
@@ -14,14 +17,19 @@ import org.eclipse.paho.client.mqttv3.*;
 public class MqttClientService {
     MqttClient client;
     MqttConnectOptions options;
+    ObjectMapper objectMapper;
+    DeviceStatusMemoryService deviceStatusMemoryService;
 
-    MqttClientService(MqttConnectOptions options, MqttClient client) {
+    MqttClientService(MqttConnectOptions options, MqttClient client, ObjectMapper objectMapper, DeviceStatusMemoryService deviceStatusMemoryService) {
         this.options = options;
         this.client = client;
+        this.objectMapper = objectMapper;
+        this.deviceStatusMemoryService = deviceStatusMemoryService;
     }
 
     @PostConstruct
     void init() {
+        log.info("init mqtt client");
         try {
             client.setCallback(new Callback());
             client.connect(options);
@@ -33,7 +41,7 @@ public class MqttClientService {
     }
 
     void setSubscribedTopics() throws MqttException {
-        client.subscribe("/device", 1);
+        client.subscribe("/status", 1);
         client.subscribe("/events", 2);
     }
 
@@ -55,7 +63,7 @@ public class MqttClientService {
     }
 
     public void subscribe(String topic) throws MqttException {
-        client.subscribe(topic);
+        client.subscribe(topic, 2);
     }
 
     class Callback implements MqttCallback, MqttCallbackExtended {
@@ -65,9 +73,14 @@ public class MqttClientService {
         }
 
         @Override
-        public void messageArrived(String topic, MqttMessage mqttMessage) {
-            log.info("MqttMessage received: {}", mqttMessage.toString());
-            // TODO:
+        public void messageArrived(String topic, @NotNull MqttMessage mqttMessage) {
+            log.info("MqttMessage received: topic: {}, {}", topic, mqttMessage);
+            try {
+                DeviceMqttMessage msg = objectMapper.readValue(mqttMessage.getPayload(), DeviceMqttMessage.class);
+                deviceStatusMemoryService.handleDeviceMqttMessage(msg);
+            } catch (Exception e) {
+                log.error(e.getMessage());
+            }
         }
 
         @Override

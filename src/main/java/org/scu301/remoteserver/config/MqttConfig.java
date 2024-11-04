@@ -11,7 +11,7 @@ public class MqttConfig {
     private String deviceList;
     private String deviceEvent;
     private String broker;
-    private static final String clientId = "remote-server";
+    private static final String clientId = "remote-server-java";
 
     public String getClientId() {
         return clientId;

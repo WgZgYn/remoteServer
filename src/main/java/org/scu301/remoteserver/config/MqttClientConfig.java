@@ -19,9 +19,12 @@ public class MqttClientConfig {
     @Bean
     public MqttConnectOptions mqttConnectOptions() {
         MqttConnectOptions options = new MqttConnectOptions();
+        options.setUserName(config.getClientId());
+        options.setServerURIs(new String[]{config.getBroker()});
+        options.setCleanSession(true);
         options.setAutomaticReconnect(true);
-        options.setCleanSession(false);
-        options.setKeepAliveInterval(90);
+        options.setKeepAliveInterval(60);
+        options.setConnectionTimeout(10);
         return options;
     }
 
