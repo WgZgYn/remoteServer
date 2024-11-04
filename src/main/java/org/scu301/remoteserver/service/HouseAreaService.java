@@ -26,12 +26,21 @@ public class HouseAreaService {
         this.houseRepository = houseRepository;
     }
 
-    public List<House> getHouses(int accountId) {
+    public List<House> getHousesByAccountId(int accountId) {
         return accountService.getHouses(accountId);
     }
 
-    public List<Area> getAreas(int houseId) {
+    public List<Area> getAreasByAccountId(int houseId) {
         return areaRepository.findAreasByHouseId(houseId);
+    }
+
+    // TODO: need to be tested, benchmark time--consume...
+    public List<Area> getAllAreas(int accountId) {
+        return getHousesByAccountId(accountId)
+                .stream()
+                .map(House::getAreas)
+                .flatMap(List::stream)
+                .toList();
     }
 
     public boolean addHouse(int accountId, String houseName) {

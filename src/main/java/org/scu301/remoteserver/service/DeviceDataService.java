@@ -6,7 +6,6 @@ import org.scu301.remoteserver.entity.*;
 import org.scu301.remoteserver.repository.AccountRepository;
 import org.scu301.remoteserver.repository.HouseRepository;
 import org.scu301.remoteserver.repository.MemberRepository;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
