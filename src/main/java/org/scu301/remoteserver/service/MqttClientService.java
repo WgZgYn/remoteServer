@@ -76,7 +76,7 @@ public class MqttClientService {
 
         @Override
         public void messageArrived(String topic, @NotNull MqttMessage mqttMessage) {
-            log.info("MqttMessage received: topic: {}, {}", topic, mqttMessage);
+            log.info("MqttMessage Arrived: topic: {}, {}", topic, mqttMessage);
             try {
                 DeviceMqttMessage msg = objectMapper.readValue(mqttMessage.getPayload(), DeviceMqttMessage.class);
                 applicationEventPublisher.publishEvent(msg);
