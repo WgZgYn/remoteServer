@@ -1,0 +1,89 @@
+openapi: 3.1.0
+info:
+  title: 接口服务
+  description: 接口服务
+  version: 1.0.0
+servers:
+  - url: 'http://{ip}:{port}'
+    description: 远端服务器
+    variables:
+      ip:
+        default: 47.108.27.238
+      port:
+        enum:
+          - '80'
+          - '443'
+        default: '80'
+      basePath:
+        default: api
+paths:
+  /:
+    get:
+      summary: Vite-Vue网页服务
+      responses:
+        200:
+          description: 页面获取成功
+          content: HTML
+  /api/login:
+    post:
+      summary: 登入账号
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: 登入账号成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Response'
+  /api/signup:
+    post:
+      summary: 注册账号
+      responses:
+        200:
+          description: 注册账号成功
+          content:
+            application/json:
+              schema:
+
+components:
+  schemas:
+    Response:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+        timestamp:
+          type: integer
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/LoginResponse'
+
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      require:
+        - username
+        - password
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        role:
+          enum:
+            - admin
+            - user
+          default: user
+
+

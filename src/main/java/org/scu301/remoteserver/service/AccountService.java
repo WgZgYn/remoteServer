@@ -2,12 +2,8 @@ package org.scu301.remoteserver.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.scu301.remoteserver.entity.Account;
-import org.scu301.remoteserver.entity.House;
-import org.scu301.remoteserver.entity.Member;
-import org.scu301.remoteserver.repository.AccountRepository;
 import org.scu301.remoteserver.security.Argon2Utils;
 import org.scu301.remoteserver.util.Pair;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -15,14 +11,16 @@ import java.util.*;
 @Slf4j
 @Service
 public class AccountService {
-    AccountRepository accountRepository;
+    DataBaseReadService dbReadService;
+    DataBaseWriteService dbWriteService;
 
-    AccountService(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    AccountService(DataBaseReadService dbReadService, DataBaseWriteService dbWriteService) {
+        this.dbReadService = dbReadService;
+        this.dbWriteService = dbWriteService;
     }
 
     public boolean addAccount(String username, String password) {
-        boolean exist = accountRepository.existsAccountByUsername(username);
+        boolean exist = dbReadService.existsAccountByUsername(username);
         if (exist) return false;
         Pair<String, byte[]> pair = Argon2Utils.encrypt(password.toCharArray());
         Account account = new Account();
@@ -31,37 +29,22 @@ public class AccountService {
         account.setSalt(Argon2Utils.hex(pair.value()));
         account.setRole("user");
         log.info(account.toString());
-        accountRepository.save(account);
+        dbWriteService.saveAccount(account);
         log.info("add account {}", username);
         return true;
     }
 
     public boolean changePassword(String username, String oldPassword, String newPassword) {
-        Optional<Account> accountOptional = accountRepository.findAccountByUsername(username);
+        Optional<Account> accountOptional = dbReadService.getAccount(username);
         if (accountOptional.isEmpty()) return false;
         Account account = accountOptional.get();
         boolean ok = Argon2Utils.verify(oldPassword, account.getPasswordHash().toCharArray());
         if (!ok) return false;
         account.setPasswordHash(newPassword);
-        accountRepository.save(account);
+        dbWriteService.saveAccount(account);
         log.info("user {} change password", username);
         return true;
     }
 
-//    @Cacheable(value = "accounts", key = "#accountId")
-    public Optional<Account> getAccount(int accountId) {
-        return accountRepository.findById(accountId);
-    }
 
-    public Set<Member> getMembers(int accountId) {
-        return getAccount(accountId).map(Account::getMembers).orElse(new LinkedHashSet<>());
-    }
-
-    public List<House> getHouses(int accountId) {
-        return getMembers(accountId).stream().map(Member::getHouse).toList();
-    }
-
-    public List<Account> getFamily(int accountId) {
-        return getMembers(accountId).stream().map(Member::getAccount).toList();
-    }
 }

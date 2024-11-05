@@ -4,7 +4,6 @@ package org.scu301.remoteserver.controller;
 import org.scu301.remoteserver.dto.*;
 import org.scu301.remoteserver.entity.Account;
 import org.scu301.remoteserver.entity.Area;
-
 import org.scu301.remoteserver.entity.House;
 import org.scu301.remoteserver.entity.Member;
 import org.scu301.remoteserver.repository.AccountRepository;

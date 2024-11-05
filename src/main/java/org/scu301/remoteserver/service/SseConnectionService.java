@@ -1,5 +1,8 @@
 package org.scu301.remoteserver.service;
 
+import org.jetbrains.annotations.NotNull;
+import org.scu301.remoteserver.event.events.DeviceStatusUpdateEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Sinks;
 
@@ -17,6 +20,13 @@ public class SseConnectionService {
         Sinks.Many<String> sink = userSinks.get(userId);
         if (sink != null) {
             sink.tryEmitNext(event);
+        }
+    }
+
+    @EventListener
+    private void onDeviceStatusUpdate(@NotNull DeviceStatusUpdateEvent event) {
+        for (Integer accountId : event.account_id()) {
+            sendEvent(accountId, String.valueOf(event.device_id()));
         }
     }
 }

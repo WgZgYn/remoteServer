@@ -24,8 +24,6 @@ class RemoteServerApplicationTests {
     @Autowired
     private HouseRepository houseRepository;
     @Autowired
-    private DeviceControlRepository deviceControlRepository;
-    @Autowired
     private DeviceDataService deviceDataService;
 
 //	@Test

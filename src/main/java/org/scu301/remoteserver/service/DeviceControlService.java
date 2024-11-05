@@ -3,7 +3,6 @@ package org.scu301.remoteserver.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.scu301.remoteserver.entity.Device;
-import org.scu301.remoteserver.repository.DeviceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -11,16 +10,16 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class DeviceControlService {
+    DataBaseReadService dbReadService;
     MqttClientService mqttClientService;
-    DeviceRepository deviceRepository;
 
-    DeviceControlService(MqttClientService mqttClientService, DeviceRepository deviceRepository) {
+    DeviceControlService(MqttClientService mqttClientService, DataBaseReadService dbReadService) {
         this.mqttClientService = mqttClientService;
-        this.deviceRepository = deviceRepository;
+        this.dbReadService = dbReadService;
     }
 
     public boolean executeService(int deviceId, String serviceName) {
-        Optional<Device> deviceOptional = deviceRepository.findById(deviceId);
+        Optional<Device> deviceOptional = dbReadService.getDevice(deviceId);
         if (deviceOptional.isEmpty()) return false;
         Device device = deviceOptional.get();
         try {

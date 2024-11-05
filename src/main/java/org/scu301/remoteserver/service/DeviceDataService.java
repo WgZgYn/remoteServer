@@ -12,29 +12,19 @@ import org.scu301.remoteserver.entity.Area;
 import org.scu301.remoteserver.entity.Device;
 import org.scu301.remoteserver.entity.House;
 import org.scu301.remoteserver.entity.Member;
-import org.scu301.remoteserver.repository.AccountRepository;
-import org.scu301.remoteserver.repository.AreaRepository;
-import org.scu301.remoteserver.repository.HouseRepository;
-import org.scu301.remoteserver.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DeviceDataService {
-    private final AccountRepository accountRepository;
-    private final HouseRepository houseRepository;
-    private final MemberRepository memberRepository;
-    private final AreaRepository areaRepository ;
+    DataBaseReadService dbReadService;
 
-    public DeviceDataService(AccountRepository accountRepository, HouseRepository houseRepository, MemberRepository memberRepository, AreaRepository areaRepository) {
-        this.accountRepository = accountRepository;
-        this.houseRepository = houseRepository;
-        this.memberRepository = memberRepository;
-        this.areaRepository = areaRepository;
+    public DeviceDataService(DataBaseReadService dbReadService) {
+        this.dbReadService = dbReadService;
     }
 
 //    @Cacheable(value = "devices", key = "#accountId")
     public List<Device> getAllDevices(int accountId) {
-        Optional<Account> accountOptional = accountRepository.findById(accountId);
+        Optional<Account> accountOptional = dbReadService.getAccount(accountId);
         if (accountOptional.isEmpty()) return new ArrayList<>();
         Account account = accountOptional.get();
         ArrayList<Device> devices = new ArrayList<>();
@@ -49,20 +39,20 @@ public class DeviceDataService {
 
 //    @Cacheable(value = "accountDevices", key = "#accountId")
     public Optional<AccountDevices> getHousesDevices(int accountId) {
-        return accountRepository.findById(accountId).map(AccountDevices::of);
+        return dbReadService.getAccount(accountId).map(AccountDevices::of);
     }
 
 //    @Cacheable(value = "houseDevices", key = "#houseId")
     public Optional<HouseDevices> getHouseDevices(int accountId, int houseId) {
-        boolean ok = memberRepository.existsByAccountIdAndHouseId(accountId, houseId);
+        boolean ok = dbReadService.existsMemberByAccountIdAndHouseId(accountId, houseId);
         if (!ok) return Optional.empty();
-        return houseRepository.findById(houseId).map(HouseDevices::of);
+        return dbReadService.getHouse(houseId).map(HouseDevices::of);
     }
 
     public Optional<AreaDevices> getAreaDevices(int accountId, int areaId) {
-        boolean ok = memberRepository.findMembersByAccountId(accountId).stream().anyMatch(member -> member.getHouse().getAreas().stream().anyMatch(area -> area.getId() == areaId));
+        boolean ok = dbReadService.getMembers(accountId).stream().anyMatch(member -> member.getHouse().getAreas().stream().anyMatch(area -> area.getId() == areaId));
         if (!ok) return Optional.empty();
-        return areaRepository.findById(areaId).map(AreaDevices::of);
+        return dbReadService.getArea(areaId).map(AreaDevices::of);
     }
 
 }

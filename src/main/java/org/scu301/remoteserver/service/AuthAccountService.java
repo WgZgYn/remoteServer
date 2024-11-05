@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.scu301.remoteserver.dto.LoginResponse;
 import org.scu301.remoteserver.entity.Account;
-import org.scu301.remoteserver.repository.AccountRepository;
 import org.scu301.remoteserver.security.Argon2Utils;
 import org.scu301.remoteserver.security.Claims;
 import org.scu301.remoteserver.security.JwtUtils;
@@ -43,22 +42,24 @@ public class AuthAccountService {
         }
     }
 
-    AccountRepository accountRepository;
+    private final DataBaseReadService dbReadService;
+    private final DataBaseWriteService dbWriteService;
 
-    AuthAccountService(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    AuthAccountService(DataBaseReadService dbReadService, DataBaseWriteService dbWriteService) {
+        this.dbReadService = dbReadService;
+        this.dbWriteService = dbWriteService;
     }
 
 
     public LoginResponse authenticate(String username, String password) throws AuthError {
-        Optional<Account> user = accountRepository.findAccountByUsername(username);
+        Optional<Account> user = dbReadService.getAccount(username);
         if (user.isPresent()) {
             Account account = user.get();
             String passwordHash = account.getPasswordHash();
             if (Argon2Utils.verify(passwordHash, password.toCharArray())) {
                 // 创建 Claims
                 account.setLastLogin(Instant.now());
-                accountRepository.save(account);
+                dbWriteService.saveAccount(account);
                 log.info("Authenticated user {}, update lastLogin", username);
                 Claims claims = new Claims(account.getId(), username, account.getRole(), System.currentTimeMillis());
                 // 生成 JWT

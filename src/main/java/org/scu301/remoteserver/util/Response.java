@@ -15,7 +15,7 @@ public class Response<T> extends Result {
     }
 
 
-    public static <T> Response<T> of(T date) {
-        return new Response<>(200, "success", date);
+    public static <T> Response<T> of(T data) {
+        return new Response<>(200, "success", data);
     }
 }
