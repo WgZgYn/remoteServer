@@ -1,4 +1,4 @@
-package org.scu301.remoteserver.dto;
+package org.scu301.remoteserver.vo;
 
 import org.scu301.remoteserver.entity.Area;
 
