@@ -4,10 +4,8 @@ import org.scu301.remoteserver.entity.*;
 import org.scu301.remoteserver.repository.*;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class DataBaseReadService {
@@ -62,15 +60,20 @@ public class DataBaseReadService {
         return houseRepository.findById(houseId);
     }
 
+    public Optional<House> getHouseByAccountIdAndHouseId(Integer accountId, Integer houseId) {
+        return memberRepository.findHouseByAccountIdAndHouseId(accountId, houseId);
+    }
+
     public Optional<Area> getArea(Integer areaId) {
         return areaRepository.findById(areaId);
     }
 
-    public Set<Member> getMembers(Integer accountId) {
-        return getAccount(accountId).map(Account::getMembers).orElse(new LinkedHashSet<>());
+    public List<Member> getMembers(Integer accountId) {
+        return memberRepository.findMembersByAccountId(accountId);
     }
 
     public List<House> getHouses(Integer accountId) {
+//        return
         return getMembers(accountId).stream().map(Member::getHouse).toList();
     }
 
