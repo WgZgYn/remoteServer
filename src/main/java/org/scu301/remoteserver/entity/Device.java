@@ -25,13 +25,6 @@ public class Device {
     @Column(name = "efuse_mac", nullable = false)
     private String efuseMac;
 
-    @Column(name = "chip_model", nullable = false)
-    private String chipModel;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "type_id")
-    private DeviceType type;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "area_id")
     private Area area;
@@ -45,14 +38,12 @@ public class Device {
     private Account createdBy;
 
     @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
-    private Set<DeviceControl> deviceControls = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
-    private Set<DeviceService> deviceServices = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY)
     private Set<DeviceEvent> deviceEvents = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "subscriber", fetch = FetchType.LAZY)
     private Set<Subscribe> subscribes = new LinkedHashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "model_id")
+    private DeviceModel model;
 }

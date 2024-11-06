@@ -31,6 +31,6 @@ public class DeviceControl {
     private Map<String, Object> parameter;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "device_id")
-    private Device device;
+    @JoinColumn(name = "model_id")
+    private DeviceModel model;
 }

@@ -54,7 +54,4 @@ public class Account {
 
 //    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
 //    private UserInfo userInfo;
-
-//    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    private List<Member> members = new ArrayList<>(); // 用于关联 Member
 }
