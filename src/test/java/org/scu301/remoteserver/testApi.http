@@ -6,6 +6,8 @@ GET localhost:8088/test/list/accountId
 ###
 GET localhost:8088/test/list/houseId
 ###
+GET localhost:8088/test/list/house
+###
 POST localhost:8088/api/login
 Content-Type: application/json
 
@@ -13,15 +15,17 @@ Content-Type: application/json
   "username": "wzy",
   "password": "123456"
 }
+
+> {% client.global.set("local-java-token", response.body.data.token); %}
 ###
 GET localhost:8088/api/my/device
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwODExNjEyLCJleHAiOjE3MzA4MTg4MTIsInJvbGUiOiJhZG1pbiJ9.uJDzGZJEdOrWgAyADD8xZhYxXs61evR-PAd3TUb8U70
+Authorization: Bearer {{local-java-token}}
 ###
 GET localhost:8088/api/my/device/4
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwODExNjEyLCJleHAiOjE3MzA4MTg4MTIsInJvbGUiOiJhZG1pbiJ9.uJDzGZJEdOrWgAyADD8xZhYxXs61evR-PAd3TUb8U70
+Authorization: Bearer {{local-java-token}}
 ###
 GET localhost:8088/api/my/device/4/status
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIzIiwic3ViIjoid3p5IiwiaWF0IjoxNzMwODExNjEyLCJleHAiOjE3MzA4MTg4MTIsInJvbGUiOiJhZG1pbiJ9.uJDzGZJEdOrWgAyADD8xZhYxXs61evR-PAd3TUb8U70
+Authorization: Bearer {{local-java-token}}
 
 
 

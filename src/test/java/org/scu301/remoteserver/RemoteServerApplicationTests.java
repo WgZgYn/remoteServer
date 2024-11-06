@@ -1,15 +1,9 @@
 package org.scu301.remoteserver;
 
-import org.junit.jupiter.api.Test;
-import org.scu301.remoteserver.dto.AccountDevices;
-import org.scu301.remoteserver.entity.Device;
-import org.scu301.remoteserver.entity.House;
 import org.scu301.remoteserver.repository.*;
 import org.scu301.remoteserver.service.DeviceDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 @SpringBootTest
 class RemoteServerApplicationTests {

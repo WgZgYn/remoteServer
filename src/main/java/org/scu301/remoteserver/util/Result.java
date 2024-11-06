@@ -39,6 +39,13 @@ public class Result {
         return Result.err();
     }
 
+    public static<T> Result of(Optional<T> data, String errorMsg) {
+        if (data.isPresent()) {
+            return Response.of(data.get());
+        }
+        return Result.err();
+    }
+
     public static Result of(boolean ok, String elseMessage) {
         if (ok) return Result.ok();
         return err(elseMessage);
