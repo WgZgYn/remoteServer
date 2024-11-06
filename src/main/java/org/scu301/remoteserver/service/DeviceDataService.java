@@ -1,18 +1,15 @@
 package org.scu301.remoteserver.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.scu301.remoteserver.dto.AccountDevices;
-import org.scu301.remoteserver.dto.AreaDevices;
-import org.scu301.remoteserver.dto.HouseDevices;
-import org.scu301.remoteserver.entity.Account;
-import org.scu301.remoteserver.entity.Area;
-import org.scu301.remoteserver.entity.Device;
-import org.scu301.remoteserver.entity.House;
-import org.scu301.remoteserver.entity.Member;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.scu301.remoteserver.dto.HouseInfo;
+import org.scu301.remoteserver.entity.*;
+import org.scu301.remoteserver.vo.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DeviceDataService {
@@ -22,37 +19,62 @@ public class DeviceDataService {
         this.dbReadService = dbReadService;
     }
 
-//    @Cacheable(value = "devices", key = "#accountId")
-    public List<Device> getAllDevices(int accountId) {
-        Optional<Account> accountOptional = dbReadService.getAccount(accountId);
-        if (accountOptional.isEmpty()) return new ArrayList<>();
-        Account account = accountOptional.get();
-        ArrayList<Device> devices = new ArrayList<>();
-        account.getMembers().stream().map(Member::getHouse).map(House::getAreas).forEach(areas -> {
-                    for (Area area : areas) {
-                        devices.addAll(area.getDevices());
-                    }
-                }
-        );
-        return devices;
+    @Transactional
+    public Optional<AccountDevicesResponse> getAccountDevices(int accountId) {
+        return dbReadService.getAccount(accountId).map(this::getAccountDevices);
     }
 
-//    @Cacheable(value = "accountDevices", key = "#accountId")
-    public Optional<AccountDevices> getHousesDevices(int accountId) {
-        return dbReadService.getAccount(accountId).map(AccountDevices::of);
+    @Transactional
+    public Optional<HouseDevicesResponse> getHouseDevices(int accountId, int houseId) {
+        return dbReadService.getHouseByAccountIdAndHouseId(accountId, houseId).map(this::getHouseDevices);
     }
 
-//    @Cacheable(value = "houseDevices", key = "#houseId")
-    public Optional<HouseDevices> getHouseDevices(int accountId, int houseId) {
-        boolean ok = dbReadService.existsMemberByAccountIdAndHouseId(accountId, houseId);
-        if (!ok) return Optional.empty();
-        return dbReadService.getHouse(houseId).map(HouseDevices::of);
-    }
-
-    public Optional<AreaDevices> getAreaDevices(int accountId, int areaId) {
+    @Transactional
+    public Optional<AreaDevicesResponse> getAreaDevices(int accountId, int areaId) {
         boolean ok = dbReadService.getMembers(accountId).stream().anyMatch(member -> member.getHouse().getAreas().stream().anyMatch(area -> area.getId() == areaId));
         if (!ok) return Optional.empty();
-        return dbReadService.getArea(areaId).map(AreaDevices::of);
+        return dbReadService.getArea(areaId).map(this::getAreaDevices);
     }
 
+
+    private @NotNull AccountDevicesResponse getAccountDevices(@NotNull Account account) {
+        AccountInfo info = new AccountInfo(account.getId(), account.getUsername());
+        List<HouseDevicesResponse> houseDevices = account
+                .getMembers()
+                .stream()
+                .map(Member::getHouse)
+                .map(this::getHouseDevices)
+                .toList();
+        return new AccountDevicesResponse(info, houseDevices);
+    }
+
+    private @NotNull HouseDevicesResponse getHouseDevices(@NotNull House house) {
+        HouseInfo info = new HouseInfo(house.getId(), house.getHouseName());
+        List<AreaDevicesResponse> areaDevices = house
+                .getAreas()
+                .stream().map(this::getAreaDevices)
+                .toList();
+        return new HouseDevicesResponse(info, areaDevices);
+    }
+
+    private @NotNull AreaDevicesResponse getAreaDevices(@NotNull Area area) {
+        AreaInfo info = new AreaInfo(area.getId(), area.getAreaName());
+        List<DeviceInfo> areaDevices = area
+                .getDevices()
+                .stream().map(this::getDeviceInfo)
+                .toList();
+        return new AreaDevicesResponse(info, areaDevices);
+    }
+
+    @Contract("_ -> new")
+    private @NotNull DeviceInfo getDeviceInfo(@NotNull Device device) {
+        DeviceModel model = device.getModel();
+        return new DeviceInfo(
+                device.getId(),
+                device.getDeviceName(),
+                device.getEfuseMac(),
+                model.getModelName(),
+                model.getType(),
+                model.getDeviceControls().stream().map(DeviceControl::getParameter).toList());
+    }
 }
