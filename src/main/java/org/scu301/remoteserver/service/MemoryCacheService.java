@@ -2,7 +2,6 @@ package org.scu301.remoteserver.service;
 
 import org.scu301.remoteserver.entity.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -16,13 +15,15 @@ public class MemoryCacheService {
     Map<Integer, Set<Integer>> accountId2DeviceId = new ConcurrentHashMap<>();
     Map<String, Integer> eFuseMac2DeviceId = new ConcurrentHashMap<>();
 
+    Map<Integer, Account> accountCache = new ConcurrentHashMap<>();
+    Map<String, Account> accountCache2 = new ConcurrentHashMap<>();
+
     DataBaseReadService dbReadService;
 
     MemoryCacheService(DataBaseReadService dbReadService) {
         this.dbReadService = dbReadService;
     }
 
-    @Transactional
     public Set<Integer> getDeviceIdToAccountId(int deviceId) {
         if (!deviceId2AccountId.containsKey(deviceId)) {
             Optional<Device> device1 = dbReadService.getDevice(deviceId);
@@ -37,5 +38,18 @@ public class MemoryCacheService {
             });
         }
         return deviceId2AccountId.get(deviceId);
+    }
+
+    public Account getAccount(int accountId) {
+        return accountCache.get(accountId);
+    }
+
+    public Account getAccount(String username) {
+        return accountCache2.get(username);
+    }
+
+    public void putAccount(Account account) {
+        accountCache.put(account.getId(), account);
+        accountCache2.put(account.getUsername(), account);
     }
 }
