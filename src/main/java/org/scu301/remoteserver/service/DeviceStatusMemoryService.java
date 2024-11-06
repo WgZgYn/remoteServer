@@ -84,8 +84,8 @@ public class DeviceStatusMemoryService {
     }
 
 
-    @Async
-    @Scheduled(fixedRate = 50000)
+//    @Async
+//    @Scheduled(fixedRate = 50000)
     protected void updateStatus() {
         log.info("start schedule to fetch device's status");
         Map<String, Integer> temp = deviceMac2Id;
