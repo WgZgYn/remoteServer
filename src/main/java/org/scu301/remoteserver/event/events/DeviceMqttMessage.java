@@ -12,8 +12,8 @@ import lombok.ToString;
 public class DeviceMqttMessage {
     @JsonProperty("efuse_mac")
     String eFuseMac;
-    @JsonProperty("chip_model")
-    String chipModel;
+    @JsonProperty("model_id")
+    Integer modelId;
     @JsonProperty("type_id")
     Integer typeId;
     String type;
