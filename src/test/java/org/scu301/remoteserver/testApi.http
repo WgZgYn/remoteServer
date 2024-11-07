@@ -26,11 +26,6 @@ Authorization: Bearer {{local-java-token}}
 ###
 GET localhost:8088/api/my/device/4/status
 Authorization: Bearer {{local-java-token}}
-
-
-
-
-
 ###
 POST 47.108.27.238/api/login
 Content-Type: application/json

@@ -15,7 +15,13 @@ public interface MemberRepository extends JpaRepository<Member, Integer> {
     boolean existsByAccountIdAndHouseId(Integer accountId, Integer houseId);
 
     @Query("SELECT m.house FROM Member m WHERE m.account.id = :accountId")
-    List<House> findHousesByAccountId(@Param("accountId") Integer accountId);
+    List<House> findAllHousesByAccountId(@Param("accountId") Integer accountId);
+
+    @Query("SELECT m.house.id FROM Member m WHERE m.account.id = :id")
+    List<Integer> findAllHouseIdByAccountId(@Param("id") Integer id);
+
+    @Query("SELECT m.house.id FROM Member m WHERE m.account.id = :id")
+    List<Integer> findAllAccountIdByHouseId(@Param("id") Integer id);
 
     @Query("SELECT m.house FROM Member m WHERE m.account.id = :accountId AND m.house.id = :houseId")
     Optional<House> findHouseByAccountIdAndHouseId(@Param("accountId") Integer accountId, @Param("houseId") Integer houseId);

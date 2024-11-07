@@ -1,6 +1,7 @@
 package org.scu301.remoteserver.controller;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.scu301.remoteserver.dto.*;
 import org.scu301.remoteserver.entity.Account;
 import org.scu301.remoteserver.entity.Area;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/api/my")
 public class DeviceDataController {
@@ -65,6 +67,7 @@ public class DeviceDataController {
 
     @GetMapping("/device")
     Result getAccountDevices(@RequestAttribute("claims") Claims claims) {
+        log.info("get device");
         return Result.of(deviceService.getAccountDevices(claims.id()), "no such (account)");
     }
 }

@@ -19,5 +19,5 @@ public class DeviceType {
     private Integer id;
 
     @Column(name = "type_name", nullable = false)
-    private String typeName;
+    private String type_name;
 }
