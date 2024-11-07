@@ -72,6 +72,14 @@ public class DataBaseReadService {
         return memberRepository.findMembersByAccountId(accountId);
     }
 
+    public List<Integer> getAllHouseIdByAccountId(Integer accountId) {
+        return memberRepository.findAllHouseIdByAccountId(accountId);
+    }
+
+    public List<Integer> getAllAccountIdByHouseId(Integer houseId) {
+        return memberRepository.findAllAccountIdByHouseId(houseId);
+    }
+
     public List<House> getHouses(Integer accountId) {
 //        return
         return getMembers(accountId).stream().map(Member::getHouse).toList();
