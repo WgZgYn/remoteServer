@@ -1,4 +1,4 @@
-package org.scu301.remoteserver.event.events;
+package org.scu301.remoteserver.dto.mqtt;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 @Setter
 @Getter
-public class DeviceMqttMessage {
+public class DeviceMessage {
     @JsonProperty("efuse_mac")
     String eFuseMac;
     @JsonProperty("model_id")
