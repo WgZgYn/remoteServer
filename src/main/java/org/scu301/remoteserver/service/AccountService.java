@@ -1,10 +1,14 @@
 package org.scu301.remoteserver.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
+import org.scu301.remoteserver.dto.http.UserInfoDTO;
 import org.scu301.remoteserver.entity.Account;
+import org.scu301.remoteserver.entity.UserInfo;
 import org.scu301.remoteserver.security.Argon2Utils;
 import org.scu301.remoteserver.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -19,6 +23,9 @@ public class AccountService {
         this.dbWriteService = dbWriteService;
     }
 
+
+
+    @Transactional
     public boolean addAccount(String username, String password) {
         boolean exist = dbReadService.existsAccountByUsername(username);
         if (exist) return false;
@@ -34,6 +41,7 @@ public class AccountService {
         return true;
     }
 
+    @Transactional
     public boolean changePassword(String username, String oldPassword, String newPassword) {
         Optional<Account> accountOptional = dbReadService.getAccount(username);
         if (accountOptional.isEmpty()) return false;
@@ -46,5 +54,29 @@ public class AccountService {
         return true;
     }
 
+    public Optional<UserInfoDTO> getUserInfo(Integer accountId) {
+        return dbReadService.getUserInfoByAccountId(accountId).map(userInfo -> new UserInfoDTO(userInfo.getId(), userInfo.getAge(), userInfo.getLocation(), userInfo.getGender(), userInfo.getEmail()));
+    }
 
+    @Transactional
+    public boolean saveUserInfo(@NotNull UserInfoDTO userInfoDTO) {
+        Optional<UserInfo> userInfoOptional = dbReadService.getUserInfoByAccountId(userInfoDTO.id());
+        if (userInfoOptional.isEmpty()) {
+            return false;
+        }
+        UserInfo userInfo = userInfoOptional.get();
+        if (userInfoDTO.age() != null) {
+            userInfo.setAge(userInfoDTO.age());
+        }
+        if (userInfoDTO.location() != null) {
+            userInfo.setLocation(userInfoDTO.location());
+        }
+        if (userInfoDTO.gender() != null) {
+            userInfo.setGender(userInfoDTO.gender());
+        }
+        if (userInfoDTO.email() != null) {
+            userInfo.setEmail(userInfoDTO.email());
+        }
+        return dbWriteService.saveUserInfo(userInfo) != null;
+    }
 }

@@ -1,10 +1,8 @@
 package org.scu301.remoteserver.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import org.scu301.remoteserver.dto.AccountUpdateRequest;
-import org.scu301.remoteserver.dto.LoginRequest;
-import org.scu301.remoteserver.dto.LoginResponse;
-import org.scu301.remoteserver.dto.SignupRequest;
+import org.scu301.remoteserver.dto.http.*;
+import org.scu301.remoteserver.security.Claims;
 import org.scu301.remoteserver.service.AccountService;
 import org.scu301.remoteserver.service.AuthAccountService;
 import org.scu301.remoteserver.util.Response;
@@ -53,5 +51,18 @@ public class AccountController {
     @PostMapping("/update/account")
     Result updateInfo(@RequestBody AccountUpdateRequest request) {
         return Result.of(authAccountService.updateInfo(request), "error on update account");
+    }
+
+    @GetMapping("/userinfo")
+    Result getUserInfo(@RequestAttribute("claims") Claims claims) {
+        return Result.of(accountService.getUserInfo(claims.id()), "no userinfo");
+    }
+
+    @PostMapping("/userinfo")
+    Result updateUserInfo(@RequestAttribute("claims") Claims claims, @RequestBody UserInfoDTO request) {
+        if (claims.id().intValue() != request.id().intValue()) {
+            return Result.err("id mismatch");
+        }
+        return Result.of(accountService.saveUserInfo(request), "save userinfo error");
     }
 }
