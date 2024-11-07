@@ -1,10 +1,10 @@
 package org.scu301.remoteserver.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.scu301.remoteserver.dto.AccountUpdateRequest;
 import org.scu301.remoteserver.dto.LoginRequest;
 import org.scu301.remoteserver.dto.LoginResponse;
 import org.scu301.remoteserver.dto.SignupRequest;
-import org.scu301.remoteserver.security.Claims;
 import org.scu301.remoteserver.service.AccountService;
 import org.scu301.remoteserver.service.AuthAccountService;
 import org.scu301.remoteserver.util.Response;
@@ -46,7 +46,12 @@ public class AccountController {
     }
 
     @PostMapping("/auth")
-    Result auth(@RequestAttribute("claims") Claims claims) {
+    Result auth() {
         return Result.ok();
+    }
+
+    @PostMapping("/update/account")
+    Result updateInfo(@RequestBody AccountUpdateRequest request) {
+        return Result.of(authAccountService.updateInfo(request), "error on update account");
     }
 }

@@ -3,11 +3,13 @@ package org.scu301.remoteserver.service;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.scu301.remoteserver.dto.AccountUpdateRequest;
 import org.scu301.remoteserver.dto.LoginResponse;
 import org.scu301.remoteserver.entity.Account;
 import org.scu301.remoteserver.security.Argon2Utils;
 import org.scu301.remoteserver.security.Claims;
 import org.scu301.remoteserver.security.JwtUtils;
+import org.scu301.remoteserver.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -69,5 +71,28 @@ public class AuthAccountService {
             throw new AuthError(ErrorCode.PASSWORD_ERROR);
         }
         throw new AuthError(ErrorCode.USER_NOT_FOUND);
+    }
+
+    public boolean updateInfo(AccountUpdateRequest request) {
+        String username = request.username();
+        String password = request.password();
+
+        Optional<Account> user = dbReadService.getAccount(username);
+        if (user.isPresent()) {
+            Account account = user.get();
+            String passwordHash = account.getPasswordHash();
+            if (Argon2Utils.verify(passwordHash, password.toCharArray())) {
+                Pair<String, byte[]> newAuth = Argon2Utils.encrypt(request.newPassword().toCharArray());
+
+                account.setUsername(request.newUsername());
+                account.setSalt(new String(newAuth.value()));
+                account.setPasswordHash(newAuth.key());
+
+                dbWriteService.saveAccount(account);
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 }
