@@ -2,11 +2,9 @@ package org.scu301.remoteserver.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.jetbrains.annotations.NotNull;
-import org.scu301.remoteserver.entity.Device;
-import org.scu301.remoteserver.event.events.DeviceMqttMessage;
-import org.scu301.remoteserver.event.events.DeviceStatusUpdateEvent;
+import org.scu301.remoteserver.dto.mqtt.HostMessage;
+import org.scu301.remoteserver.dto.mqtt.DeviceMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -57,7 +55,9 @@ public class DeviceStatusMemoryService {
     }
 
     @EventListener
-    public void handleDeviceMqttMessage(@NotNull DeviceMqttMessage event) {
+    public void handleDeviceMqttMessage(@NotNull DeviceMessage event) {
+        // TODO: add timestamp to the status
+
 //        int deviceId;
 //        if (deviceMac2Id.containsKey(event.getEFuseMac())) {
 //            deviceId = deviceMac2Id.get(event.getEFuseMac());
@@ -85,18 +85,12 @@ public class DeviceStatusMemoryService {
     @Async
     @Scheduled(fixedRate = 50000)
     protected void updateStatus() {
-        log.info("start schedule to fetch device's status");
-//        Map<String, Integer> temp = deviceMac2Id;
-//        deviceMac2Id = new HashMap<>();
-//
-//        // TODO: send broadcast package
-//        for (Map.Entry<String, Integer> entry : temp.entrySet()) {
-//            log.info("update device status: {} {}", entry.getValue(), entry.getKey());
-//            try {
-//                mqttClientService.publish("/device/" + entry.getKey() + "/service", "status");
-//            } catch (MqttException e) {
-//                log.error(e.getMessage());
-//            }
-//        }
+        try {
+            deviceInnerStatus.clear();
+            log.info("start schedule to fetch device's status");
+            mqttClientService.publish("/device", HostMessage.empty("status"), 1, false);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 }
