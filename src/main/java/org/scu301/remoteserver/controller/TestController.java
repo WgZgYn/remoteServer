@@ -51,7 +51,7 @@ public class TestController {
 
     @GetMapping("/list/houseId")
     Response<String> testHouseQuery() {
-        accountRepository.findAllHouseIdById(3).forEach(System.out::println);
+//        accountRepository.findAllHouseIdById(3).forEach(System.out::println);
         return Response.of("ok");
     }
 
