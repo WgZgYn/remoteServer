@@ -14,14 +14,16 @@ public class DataBaseReadService {
     private final MemberRepository memberRepository;
     private final DeviceRepository deviceRepository;
     private final AccountRepository accountRepository;
+    private final UserInfoRepository userInfoRepository;
 
 
-    DataBaseReadService(AccountRepository accountRepository, HouseRepository houseRepository, AreaRepository areaRepository, MemberRepository memberRepository, DeviceRepository deviceRepository) {
+    DataBaseReadService(AccountRepository accountRepository, HouseRepository houseRepository, AreaRepository areaRepository, MemberRepository memberRepository, DeviceRepository deviceRepository, UserInfoRepository userInfoRepository) {
         this.accountRepository = accountRepository;
         this.houseRepository = houseRepository;
         this.areaRepository = areaRepository;
         this.memberRepository = memberRepository;
         this.deviceRepository = deviceRepository;
+        this.userInfoRepository = userInfoRepository;
     }
 
     boolean existsAccountByUsername(String username) {
@@ -87,5 +89,9 @@ public class DataBaseReadService {
 
     public List<Account> getFamily(Integer accountId) {
         return getMembers(accountId).stream().map(Member::getAccount).toList();
+    }
+
+    public Optional<UserInfo> getUserInfoByAccountId(Integer accountId) {
+        return userInfoRepository.findUserInfoByAccountId(accountId);
     }
 }
