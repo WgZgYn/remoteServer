@@ -2,9 +2,9 @@ package org.scu301.remoteserver.service;
 
 import org.jetbrains.annotations.NotNull;
 import org.scu301.remoteserver.entity.*;
-import org.scu301.remoteserver.vo.AccountDevicesResponse;
-import org.scu301.remoteserver.vo.AreaDevicesResponse;
-import org.scu301.remoteserver.vo.HouseDevicesResponse;
+import org.scu301.remoteserver.dto.http.AccountDevicesResponse;
+import org.scu301.remoteserver.dto.http.AreaDevicesResponse;
+import org.scu301.remoteserver.dto.http.HouseDevicesResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;

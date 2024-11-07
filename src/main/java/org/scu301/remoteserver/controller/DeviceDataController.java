@@ -9,11 +9,10 @@ import org.scu301.remoteserver.entity.House;
 import org.scu301.remoteserver.entity.Member;
 import org.scu301.remoteserver.repository.AccountRepository;
 import org.scu301.remoteserver.security.Claims;
-import org.scu301.remoteserver.service.DeviceDataService;
-import org.scu301.remoteserver.service.HouseAreaService;
+import org.scu301.remoteserver.service.*;
 import org.scu301.remoteserver.util.Response;
 import org.scu301.remoteserver.util.Result;
-import org.scu301.remoteserver.vo.AreaInfo;
+import org.scu301.remoteserver.dto.AreaInfo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -23,14 +22,14 @@ import java.util.*;
 @RestController
 @RequestMapping("/api/my")
 public class DeviceDataController {
-    private final AccountRepository accountRepository;
     DeviceDataService deviceService;
     HouseAreaService houseAreaService;
+    DataBaseReadService dataBaseReadService;
 
-    DeviceDataController(DeviceDataService deviceService, HouseAreaService houseAreaService, AccountRepository accountRepository) {
+    DeviceDataController(DeviceDataService deviceService, HouseAreaService houseAreaService,  DataBaseReadService dataBaseReadService) {
         this.deviceService = deviceService;
         this.houseAreaService = houseAreaService;
-        this.accountRepository = accountRepository;
+        this.dataBaseReadService = dataBaseReadService;
     }
 
     @GetMapping("/area")
@@ -47,7 +46,7 @@ public class DeviceDataController {
 
     @GetMapping("/member")
     Result listHouseMember(@RequestAttribute("claims") Claims claims) {
-        Optional<Account> accountOptional = accountRepository.findById(claims.id());
+        Optional<Account> accountOptional = dataBaseReadService.getAccount(claims.id());
         if (accountOptional.isPresent()) {
             Set<Member> members = accountOptional.get().getMembers();
             return Response.of(MemberInfo.of(members));

@@ -3,8 +3,8 @@ package org.scu301.remoteserver.service;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.scu301.remoteserver.dto.AccountUpdateRequest;
-import org.scu301.remoteserver.dto.LoginResponse;
+import org.scu301.remoteserver.dto.http.AccountUpdateRequest;
+import org.scu301.remoteserver.dto.http.LoginResponse;
 import org.scu301.remoteserver.entity.Account;
 import org.scu301.remoteserver.security.Argon2Utils;
 import org.scu301.remoteserver.security.Claims;

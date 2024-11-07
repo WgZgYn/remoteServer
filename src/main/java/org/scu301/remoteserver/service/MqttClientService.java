@@ -2,7 +2,8 @@ package org.scu301.remoteserver.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
-import org.scu301.remoteserver.event.events.DeviceMqttMessage;
+import org.scu301.remoteserver.dto.mqtt.HostMessage;
+import org.scu301.remoteserver.dto.mqtt.DeviceMessage;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,10 @@ import org.eclipse.paho.client.mqttv3.*;
 @Slf4j
 @Service
 public class MqttClientService {
-    MqttClient client;
-    MqttConnectOptions options;
-    ObjectMapper objectMapper;
-    ApplicationEventPublisher applicationEventPublisher;
-
+    private final MqttClient client;
+    private final MqttConnectOptions options;
+    private final ObjectMapper objectMapper;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     MqttClientService(MqttConnectOptions options, MqttClient client, ObjectMapper objectMapper, ApplicationEventPublisher applicationEventPublisher) {
         this.options = options;
@@ -53,12 +53,15 @@ public class MqttClientService {
         }
     }
 
+    public void publish(String topic, @NotNull HostMessage message, int qos, boolean retain) throws MqttException {
+        client.publish(topic, message.toBytes(), qos, retain);
+    }
+
     public void publish(String topic, String message) throws MqttException {
         publish(topic, message, 2);
     }
 
-
-    public void publish(String topic, String message, int qos) throws MqttException {
+    public void publish(String topic, @NotNull String message, int qos) throws MqttException {
         MqttMessage mqttMessage = new MqttMessage(message.getBytes());
         mqttMessage.setQos(qos);
         client.publish(topic, mqttMessage);
@@ -76,9 +79,9 @@ public class MqttClientService {
 
         @Override
         public void messageArrived(String topic, @NotNull MqttMessage mqttMessage) {
-            log.info("MqttMessage Arrived: topic: {}, {}", topic, mqttMessage);
+            log.info("HostMessage Arrived: topic: {}, {}", topic, mqttMessage);
             try {
-                DeviceMqttMessage msg = objectMapper.readValue(mqttMessage.getPayload(), DeviceMqttMessage.class);
+                DeviceMessage msg = objectMapper.readValue(mqttMessage.getPayload(), DeviceMessage.class);
                 applicationEventPublisher.publishEvent(msg);
             } catch (Exception e) {
                 log.error(e.getMessage());
