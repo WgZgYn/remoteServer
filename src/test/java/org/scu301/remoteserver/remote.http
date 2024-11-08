@@ -1,0 +1,10 @@
+###
+GET 47.108.27.238:80/api/auth
+###
+POST 47.108.27.238:80/api/login
+Content-Type: application/json
+
+{
+  "username": "wzy",
+  "password": "123456"
+}
