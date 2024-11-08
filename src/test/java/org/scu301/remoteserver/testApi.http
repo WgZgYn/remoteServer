@@ -1,3 +1,4 @@
+# 测试用例
 GET localhost:8088/test/ping
 ###
 GET localhost:8088/test/list/member
@@ -27,18 +28,11 @@ Authorization: Bearer {{local-java-token}}
 GET localhost:8088/api/my/device/4/status
 Authorization: Bearer {{local-java-token}}
 ###
-POST 47.108.27.238/api/login
-Content-Type: application/json
-
-{
-  "username": "wzy",
-  "password": "123456"
-}
-
-> {% client.global.set("remote-rust-token", response.body.data.token); %}
+GET localhost:8088/api/my/device/4/service/open
+Authorization: Bearer {{local-java-token}}
 ###
-GET 47.108.27.238/api/my/device/4
-Authorization: Bearer {{remote-rust-token}}
-###
-GET 47.108.27.238/api/my/device/4/status
-Authorization: Bearer {{remote-rust-token}}
+POST localhost:8088/api/my/device/4/service/light
+Authorization: Bearer {{local-java-token}}
+Content-Type: text/plain
+
+0
