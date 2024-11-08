@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 
 /**
  * 处理与浏览器的<code>SSE</code>连接<br>
@@ -27,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2024/11/1
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/my/sse")
 public class SseController {
     // 存储每个用户的 Sink
     SseConnectionService sseConnectionService;
@@ -35,7 +33,7 @@ public class SseController {
         this.sseConnectionService = sseConnectionService;
     }
 
-    @GetMapping(value = "/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamSse(@RequestAttribute("claims") Claims claims) {
         Integer accountId = claims.id();
         // 获取或创建用户的 Sink
