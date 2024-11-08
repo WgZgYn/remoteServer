@@ -26,10 +26,9 @@ public class AreaController {
         return Response.of(houseAreaService.getAreasInfoByAccountId(claims.id()));
     }
 
-    // TODO:
     @PostMapping("/")
     Result addArea(@RequestAttribute("claims") Claims claims, @RequestBody AddAreaRequest request) {
-        return Result.ok();
+        return Result.of(houseAreaService.addArea(claims.id(), request.house_id(), request.area_name()), "add area error");
     }
 
     @GetMapping("/{id}")

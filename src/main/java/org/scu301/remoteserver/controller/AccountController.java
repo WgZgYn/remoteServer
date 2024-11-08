@@ -49,7 +49,7 @@ public class AccountController {
         return Result.ok();
     }
 
-    @PostMapping("/update/account")
+    @PostMapping("/account")
     Result updateInfo(@RequestBody AccountUpdateRequest request) {
         return Result.of(authAccountService.updateInfo(request), "error on update account");
     }

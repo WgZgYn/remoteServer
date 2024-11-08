@@ -63,12 +63,10 @@ public class DeviceController {
                                 @PathVariable String serviceName) {
             log.info("get");
             int accountId = claims.id();
-            memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId);
-            try {
-                return Result.of(deviceControlService.executeService(deviceId, HostMessage.empty(serviceName)), "operation failed");
-            } catch (Exception e) {
-                return Result.err(e.getMessage());
-            }
+            if (!memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId))
+                return Result.err("the device is not in charge of account");
+
+            return Result.of(() -> deviceControlService.executeService(deviceId, HostMessage.empty(serviceName)));
         }
 
         @PostMapping(value = "/{deviceId}/service/{serviceName}", consumes = "text/plain")
@@ -78,12 +76,10 @@ public class DeviceController {
                                 @RequestBody String plainText) {
             log.info("plainText");
             int accountId = claims.id();
-            memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId);
-            try {
-                return Result.of(deviceControlService.executeService(deviceId, HostMessage.fromText(serviceName, plainText)), "operation failed");
-            } catch (Exception e) {
-                return Result.err(e.getMessage());
-            }
+            if (!memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId))
+                return Result.err("the device is not in charge of account");
+
+            return Result.of(() -> deviceControlService.executeService(deviceId, HostMessage.fromText(serviceName, plainText)));
         }
 
 
@@ -93,12 +89,10 @@ public class DeviceController {
                                 @PathVariable String serviceName,
                                 @RequestBody JsonNode json) {
             int accountId = claims.id();
-            memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId);
-            try {
-                return Result.of(deviceControlService.executeService(deviceId, HostMessage.fromJson(serviceName, json)), "operation failed");
-            } catch (Exception e) {
-                return Result.err(e.getMessage());
-            }
+            if (!memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId))
+                return Result.err("the device is not in charge of account");
+
+            return Result.of(() -> deviceControlService.executeService(deviceId, HostMessage.fromJson(serviceName, json)));
         }
 
 
@@ -108,12 +102,10 @@ public class DeviceController {
                                 @PathVariable String serviceName,
                                 @RequestBody MultipartFile file) {
             int accountId = claims.id();
-            memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId);
-            try {
-                return Result.of(deviceControlService.executeService(deviceId, HostMessage.fromFile(serviceName, file)), "operation failed");
-            } catch (Exception e) {
-                return Result.err("read file failed");
-            }
+            if (!memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId))
+                return Result.err("the device is not in charge of account");
+
+            return Result.of(() -> deviceControlService.executeService(deviceId, HostMessage.fromFile(serviceName, file)));
         }
     }
 }

@@ -32,7 +32,6 @@ public class HouseAreaService {
                 .toList();
     }
 
-    // TODO: need to be tested, benchmark time--consume...
     @Transactional
     public List<AreaInfo> getAreasInfoByAccountId(int accountId) {
         return dbReadService

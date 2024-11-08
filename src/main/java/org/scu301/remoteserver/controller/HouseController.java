@@ -21,17 +21,15 @@ public class HouseController {
         this.deviceDataService = deviceDataService;
     }
 
-    // TODO:
     @PostMapping("/")
     Result addHouse(@RequestAttribute("claims") Claims claims, @RequestBody AddHouseRequest request) {
-        return Result.ok();
+        return Result.of(houseAreaService.addHouse(claims.id(), request.house_name()), "add house error");
     }
 
     @GetMapping("/")
     Result listHouses(@RequestAttribute("claims") Claims claims) {
         return Response.of(houseAreaService.getHousesInfoByAccountId(claims.id()));
     }
-
 
     @GetMapping("/house/{id}")
     Result getHouseDevices(@RequestAttribute("claims") Claims claims, @PathVariable Integer id) {
