@@ -48,7 +48,25 @@ paths:
           description: 注册账号成功
           content:
             application/json:
+  /api/auth:
+    get:
+      summary: token验证：
+      responses:
+        200:
+          description: token有效
+        401:
+          description: token失效
+  /api/userinfo:
+    get:
+      summary: 身份信息获取
+      responses:
+        200:
+          description: 成功获取身份信息
+          content:
+            application/json:
               schema:
+                $ref: '#/components/schemas/Response'
+
 
 components:
   schemas:
@@ -64,7 +82,6 @@ components:
         data:
           oneOf:
             - $ref: '#/components/schemas/LoginResponse'
-
     LoginRequest:
       type: object
       properties:
@@ -85,5 +102,15 @@ components:
             - admin
             - user
           default: user
+    UserInfoResponse:
+      type: object
+      properties:
+        age:
+          type: int
+        email:
+          type: string
+        gender:
+          type: string
+
 
 
