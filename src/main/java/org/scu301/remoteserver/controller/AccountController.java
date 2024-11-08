@@ -1,6 +1,7 @@
 package org.scu301.remoteserver.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.scu301.remoteserver.dto.UserInfoDTO;
 import org.scu301.remoteserver.dto.http.*;
 import org.scu301.remoteserver.security.Claims;
 import org.scu301.remoteserver.service.AccountService;

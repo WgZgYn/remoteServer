@@ -2,7 +2,7 @@ package org.scu301.remoteserver.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.scu301.remoteserver.dto.http.UserInfoDTO;
+import org.scu301.remoteserver.dto.UserInfoDTO;
 import org.scu301.remoteserver.entity.Account;
 import org.scu301.remoteserver.entity.UserInfo;
 import org.scu301.remoteserver.security.Argon2Utils;
