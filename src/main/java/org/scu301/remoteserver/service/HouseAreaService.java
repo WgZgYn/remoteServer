@@ -1,10 +1,13 @@
 package org.scu301.remoteserver.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.scu301.remoteserver.dto.AreaInfo;
+import org.scu301.remoteserver.dto.HouseInfo;
 import org.scu301.remoteserver.entity.Account;
 import org.scu301.remoteserver.entity.Area;
 import org.scu301.remoteserver.entity.House;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,16 +23,24 @@ public class HouseAreaService {
         this.dbWriteService = dbWriteService;
     }
 
-    public List<House> getHousesByAccountId(int accountId) {
-        return dbReadService.getHouses(accountId);
+    @Transactional
+    public List<HouseInfo> getHousesInfoByAccountId(int accountId) {
+        return dbReadService
+                .getHouses(accountId)
+                .stream()
+                .map(HouseInfo::of)
+                .toList();
     }
 
     // TODO: need to be tested, benchmark time--consume...
-    public List<Area> getAllAreas(int accountId) {
-        return getHousesByAccountId(accountId)
+    @Transactional
+    public List<AreaInfo> getAreasInfoByAccountId(int accountId) {
+        return dbReadService
+                .getHouses(accountId)
                 .stream()
                 .map(House::getAreas)
                 .flatMap(List::stream)
+                .map(AreaInfo::of)
                 .toList();
     }
 
