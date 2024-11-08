@@ -31,7 +31,7 @@ public class HouseController {
         return Response.of(houseAreaService.getHousesInfoByAccountId(claims.id()));
     }
 
-    @GetMapping("/house/{id}")
+    @GetMapping("/{id}")
     Result getHouseDevices(@RequestAttribute("claims") Claims claims, @PathVariable Integer id) {
         return Result.of(deviceDataService.getHouseDevices(claims.id(), id), "no such (account, house)");
     }

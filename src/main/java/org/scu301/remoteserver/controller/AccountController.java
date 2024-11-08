@@ -44,7 +44,7 @@ public class AccountController {
         return ok ? Result.ok() : Result.err("User already exists");
     }
 
-    @PostMapping("/auth")
+    @GetMapping("/auth")
     Result auth() {
         return Result.ok();
     }

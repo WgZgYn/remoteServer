@@ -31,7 +31,7 @@ public class DeviceController {
         this.deviceDataService = deviceDataService;
     }
 
-    @GetMapping("/device")
+    @GetMapping("")
     Result getAccountDevices(@RequestAttribute("claims") Claims claims) {
         log.info("get device");
         return Result.of(deviceDataService.getAccountDevices(claims.id()), "no such (account)");
