@@ -13,13 +13,10 @@ public class UserInfo {
     @Column(name = "account_id", nullable = false)
     private Integer id;
 
-    @MapsId
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
-
-    @Column(name = "real_name")
-    private String realName;
+//    @MapsId
+//    @OneToOne(fetch = FetchType.LAZY, optional = false)
+//    @JoinColumn(name = "account_id", nullable = false)
+//    private Account account;
 
     @Column(name = "gender", length = Integer.MAX_VALUE)
     private String gender;
@@ -29,9 +26,6 @@ public class UserInfo {
 
     @Column(name = "age")
     private Integer age;
-
-    @Column(name = "identity")
-    private String identity;
 
     @Column(name = "email")
     private String email;

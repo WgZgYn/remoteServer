@@ -92,6 +92,6 @@ public class DataBaseReadService {
     }
 
     public Optional<UserInfo> getUserInfoByAccountId(Integer accountId) {
-        return userInfoRepository.findUserInfoByAccountId(accountId);
+        return userInfoRepository.findUserInfoById(accountId);
     }
 }

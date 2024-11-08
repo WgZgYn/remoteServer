@@ -23,14 +23,13 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void addCorsMappings(@NotNull CorsRegistry registry) {
+    public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                //是否发送Cookie
-                .allowCredentials(true)
-                //放行哪些原始域
                 .allowedOrigins("*")
-                .allowedMethods(new String[]{"GET", "POST", "PUT", "DELETE"})
+                .allowedMethods("*")
                 .allowedHeaders("*")
-                .exposedHeaders("*");
+                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowCredentials(true)
+                .maxAge(3600);
     }
 }

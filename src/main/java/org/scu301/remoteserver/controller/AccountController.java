@@ -61,9 +61,6 @@ public class AccountController {
 
     @PostMapping("/userinfo")
     Result updateUserInfo(@RequestAttribute("claims") Claims claims, @RequestBody UserInfoDTO request) {
-        if (claims.id().intValue() != request.id().intValue()) {
-            return Result.err("id mismatch");
-        }
-        return Result.of(accountService.saveUserInfo(request), "save userinfo error");
+        return Result.of(accountService.saveUserInfo(request, claims.id()), "save userinfo error");
     }
 }

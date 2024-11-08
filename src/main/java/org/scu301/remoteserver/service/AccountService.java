@@ -24,7 +24,6 @@ public class AccountService {
     }
 
 
-
     @Transactional
     public boolean addAccount(String username, String password) {
         boolean exist = dbReadService.existsAccountByUsername(username);
@@ -55,26 +54,32 @@ public class AccountService {
     }
 
     public Optional<UserInfoDTO> getUserInfo(Integer accountId) {
-        return dbReadService.getUserInfoByAccountId(accountId).map(userInfo -> new UserInfoDTO(userInfo.getId(), userInfo.getAge(), userInfo.getLocation(), userInfo.getGender(), userInfo.getEmail()));
+        return dbReadService.getUserInfoByAccountId(accountId).map(userInfo -> new UserInfoDTO(userInfo.getAge(), userInfo.getLocation(), userInfo.getGender(), userInfo.getEmail()));
     }
 
     @Transactional
-    public boolean saveUserInfo(@NotNull UserInfoDTO userInfoDTO) {
-        Optional<UserInfo> userInfoOptional = dbReadService.getUserInfoByAccountId(userInfoDTO.id());
-        if (userInfoOptional.isEmpty()) {
-            return false;
-        }
-        UserInfo userInfo = userInfoOptional.get();
+    public boolean saveUserInfo(@NotNull UserInfoDTO userInfoDTO, Integer accountId) {
+        Optional<UserInfo> userInfoOptional = dbReadService.getUserInfoByAccountId(accountId);
+        UserInfo userInfo = userInfoOptional.orElseGet(() -> {
+            UserInfo info = new UserInfo();
+            log.info("new info");
+            info.setId(accountId);
+            return info;
+        });
         if (userInfoDTO.age() != null) {
+            log.info("set age");
             userInfo.setAge(userInfoDTO.age());
         }
         if (userInfoDTO.location() != null) {
+            log.info("set location");
             userInfo.setLocation(userInfoDTO.location());
         }
         if (userInfoDTO.gender() != null) {
+            log.info("set gender");
             userInfo.setGender(userInfoDTO.gender());
         }
         if (userInfoDTO.email() != null) {
+            log.info("set email");
             userInfo.setEmail(userInfoDTO.email());
         }
         return dbWriteService.saveUserInfo(userInfo) != null;
