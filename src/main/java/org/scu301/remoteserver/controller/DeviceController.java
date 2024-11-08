@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.scu301.remoteserver.dto.mqtt.HostMessage;
 import org.scu301.remoteserver.security.Claims;
 import org.scu301.remoteserver.service.DeviceControlService;
+import org.scu301.remoteserver.service.DeviceDataService;
 import org.scu301.remoteserver.service.DeviceStatusMemoryService;
 import org.scu301.remoteserver.service.MemoryCacheService;
 import org.scu301.remoteserver.util.Result;
@@ -18,25 +19,30 @@ public class DeviceController {
     private final DeviceStatusMemoryService deviceStatusMemoryService;
     private final MemoryCacheService memoryCacheService;
     private final DeviceControlService deviceControlService;
+    private final DeviceDataService deviceDataService;
 
-    DeviceController(DeviceControlService deviceControlService, DeviceStatusMemoryService deviceStatusMemoryService, MemoryCacheService memoryCacheService) {
+    DeviceController(DeviceControlService deviceControlService,
+                     DeviceStatusMemoryService deviceStatusMemoryService,
+                     MemoryCacheService memoryCacheService,
+                     DeviceDataService deviceDataService) {
         this.deviceControlService = deviceControlService;
         this.deviceStatusMemoryService = deviceStatusMemoryService;
         this.memoryCacheService = memoryCacheService;
+        this.deviceDataService = deviceDataService;
     }
 
+    @GetMapping("/device")
+    Result getAccountDevices(@RequestAttribute("claims") Claims claims) {
+        log.info("get device");
+        return Result.of(deviceDataService.getAccountDevices(claims.id()), "no such (account)");
+    }
+
+    // TODO: replace it to deviceInfo
     @GetMapping("/{deviceId}")
     Result deviceStatus(@RequestAttribute("claims") Claims claims, @PathVariable int deviceId) {
         int accountId = claims.id();
         memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId);
         return Result.of(deviceStatusMemoryService.getStatus(deviceId));
-    }
-
-    @GetMapping("/{deviceId}/{serviceName}")
-    Result executeService(@RequestAttribute("claims") Claims claims, @PathVariable int deviceId, @PathVariable String serviceName) {
-        int accountId = claims.id();
-        memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId);
-        return Result.of(deviceControlService.executeService(deviceId, serviceName), "operation failed");
     }
 
     // This status is the last status, device report to the server.
@@ -49,7 +55,22 @@ public class DeviceController {
     }
 
     @RestController
+    @RequestMapping("/api/my/device")
     class DeviceServiceController {
+        @GetMapping(value = "/{deviceId}/service/{serviceName}")
+        Result executeServiceV2(@RequestAttribute("claims") Claims claims,
+                                @PathVariable int deviceId,
+                                @PathVariable String serviceName) {
+            log.info("get");
+            int accountId = claims.id();
+            memoryCacheService.isDeviceInChargeOfAccount(deviceId, accountId);
+            try {
+                return Result.of(deviceControlService.executeService(deviceId, HostMessage.empty(serviceName)), "operation failed");
+            } catch (Exception e) {
+                return Result.err(e.getMessage());
+            }
+        }
+
         @PostMapping(value = "/{deviceId}/service/{serviceName}", consumes = "text/plain")
         Result executeServiceV2(@RequestAttribute("claims") Claims claims,
                                 @PathVariable int deviceId,
