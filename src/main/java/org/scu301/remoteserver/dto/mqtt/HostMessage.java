@@ -1,6 +1,7 @@
 package org.scu301.remoteserver.dto.mqtt;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,6 +10,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
+@Slf4j
 public class HostMessage {
     private static final Charset defaultCharset = Charset.defaultCharset();
     private static final int MAX_URL_LENGTH = Byte.MAX_VALUE;
@@ -19,13 +21,13 @@ public class HostMessage {
         File,
     }
 
-    private ContentType contentType;
-    private int contentLength;
-    private byte serviceLength;
-    private byte[] serviceName;
-    private byte[] body;
+    private final ContentType contentType;
+    private final int contentLength;
+    private final byte serviceLength;
+    private final byte[] serviceName;
+    private final byte[] body;
 
-    private HostMessage(byte[] serviceName, ContentType contentType, byte[] body) throws IOException {
+    private HostMessage(byte[] serviceName, ContentType contentType, byte[] body) {
         if (serviceName.length >= MAX_URL_LENGTH) {
             throw new IllegalArgumentException("Service name too long");
         }
@@ -34,6 +36,8 @@ public class HostMessage {
         this.contentType = contentType;
         this.contentLength = body.length + 1;
         this.body = body;
+
+        log.info(new String(serviceName));
     }
 
     public byte[] toBytes() {
@@ -45,6 +49,17 @@ public class HostMessage {
         buffer.put((byte) '\0'); // c str padding
         buffer.put(body);
         buffer.put((byte) '\0'); // c str padding
+
+        // Just For Test
+        {
+            byte[] data = buffer.array();
+            for (byte b : data) {
+                System.out.print(b);
+                System.out.print(' ');
+            }
+            System.out.println();
+        }
+
         return buffer.array();
     }
 
