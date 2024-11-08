@@ -6,6 +6,15 @@ import java.util.Optional;
 
 @Data
 public class Result {
+    enum Code {
+        Ok(200),
+        Err(500);
+        int code;
+        Code(int code) {
+            this.code = code;
+        }
+    }
+
     protected int code;
     protected String message;
     protected long timestamp;
