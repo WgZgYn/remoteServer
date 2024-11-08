@@ -54,7 +54,7 @@ public class AccountService {
     }
 
     public Optional<UserInfoDTO> getUserInfo(Integer accountId) {
-        return dbReadService.getUserInfoByAccountId(accountId).map(userInfo -> new UserInfoDTO(userInfo.getAge(), userInfo.getLocation(), userInfo.getGender(), userInfo.getEmail()));
+        return dbReadService.getUserInfoByAccountId(accountId).map(userInfo -> new UserInfoDTO(userInfo.getAge(), userInfo.getCity(), userInfo.getGender(), userInfo.getEmail(), userInfo.getName()));
     }
 
     @Transactional
@@ -70,9 +70,9 @@ public class AccountService {
             log.info("set age");
             userInfo.setAge(userInfoDTO.age());
         }
-        if (userInfoDTO.location() != null) {
+        if (userInfoDTO.city() != null) {
             log.info("set location");
-            userInfo.setLocation(userInfoDTO.location());
+            userInfo.setCity(userInfoDTO.city());
         }
         if (userInfoDTO.gender() != null) {
             log.info("set gender");
@@ -81,6 +81,10 @@ public class AccountService {
         if (userInfoDTO.email() != null) {
             log.info("set email");
             userInfo.setEmail(userInfoDTO.email());
+        }
+        if (userInfoDTO.name() != null) {
+            log.info("set name");
+            userInfo.setName(userInfoDTO.name());
         }
         return dbWriteService.saveUserInfo(userInfo) != null;
     }

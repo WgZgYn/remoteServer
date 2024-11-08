@@ -21,12 +21,15 @@ public class UserInfo {
     @Column(name = "gender", length = Integer.MAX_VALUE)
     private String gender;
 
-    @Column(name = "location")
-    private String location;
+    @Column(name = "city")
+    private String city;
 
     @Column(name = "age")
     private Integer age;
 
     @Column(name = "email")
     private String email;
+
+    @Column(name = "name")
+    private String name;
 }
