@@ -12,10 +12,16 @@ import lombok.ToString;
 public class DeviceMessage {
     @JsonProperty("efuse_mac")
     String eFuseMac;
+
     @JsonProperty("model_id")
     Integer modelId;
+
     @JsonProperty("type_id")
     Integer typeId;
+
+    @JsonProperty("model_name")
+    String modelName;
+
     String type;
     JsonNode payload;
 }

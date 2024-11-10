@@ -46,7 +46,7 @@ public class DataBaseReadService {
         return deviceRepository.findById(deviceId);
     }
 
-    public Optional<Device> getDeviceByMac(String mac) {
+    public Optional<Device> getDevice(String mac) {
         return deviceRepository.findDeviceByEfuseMac(mac);
     }
 
@@ -83,7 +83,6 @@ public class DataBaseReadService {
     }
 
     public List<House> getHouses(Integer accountId) {
-//        return
         return getMembers(accountId).stream().map(Member::getHouse).toList();
     }
 

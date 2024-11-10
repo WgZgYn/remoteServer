@@ -27,7 +27,7 @@ public class MemberController {
         this.dataBaseReadService = dataBaseReadService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     @Transactional
     Result listHouseMember(@RequestAttribute("claims") Claims claims) {
         Optional<Account> accountOptional = dataBaseReadService.getAccount(claims.id());

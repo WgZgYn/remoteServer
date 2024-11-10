@@ -21,12 +21,12 @@ public class AreaController {
         this.deviceDataService = deviceDataService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     Result listArea(@RequestAttribute("claims") Claims claims) {
         return Response.of(houseAreaService.getAreasInfoByAccountId(claims.id()));
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     Result addArea(@RequestAttribute("claims") Claims claims, @RequestBody AddAreaRequest request) {
         return Result.of(houseAreaService.addArea(claims.id(), request.house_id(), request.area_name()), "add area error");
     }

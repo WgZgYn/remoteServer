@@ -20,26 +20,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class DeviceDataService {
     DataBaseReadService dbReadService;
-
     public DeviceDataService(DataBaseReadService dbReadService) {
         this.dbReadService = dbReadService;
     }
 
-
     @Transactional
-//    @Cacheable(value = "accountDevices", key = "accountId")
     public Optional<AccountDevicesResponse> getAccountDevices(int accountId) {
         return dbReadService.getAccount(accountId).map(this::getAccountDevices);
     }
 
     @Transactional
-//    @Cacheable(value = "accountDevices", key = "accountId")
     public Optional<HouseDevicesResponse> getHouseDevices(int accountId, int houseId) {
         return dbReadService.getHouseByAccountIdAndHouseId(accountId, houseId).map(this::getHouseDevices);
     }
 
     @Transactional
-//    @Cacheable(value = "accountDevices", key = "accountId")
     public Optional<AreaDevicesResponse> getAreaDevices(int accountId, int areaId) {
         boolean ok = dbReadService.getMembers(accountId).stream().anyMatch(member -> member.getHouse().getAreas().stream().anyMatch(area -> area.getId() == areaId));
         if (!ok) return Optional.empty();
@@ -47,7 +42,11 @@ public class DeviceDataService {
     }
 
     @Transactional
-//    @Cacheable(value = "deviceOwners", key = "deviceId")
+    public Optional<DeviceInfo> getDeviceInfo(int deviceId) {
+        return dbReadService.getDevice(deviceId).map(this::getDeviceInfo);
+    }
+
+    @Transactional
     public List<Integer> deviceOwners(int deviceId) {
         return dbReadService.getDevice(deviceId).map(device -> {
             Integer houseId = device.getArea().getHouse().getId();
@@ -83,6 +82,7 @@ public class DeviceDataService {
                 .toList();
         return new AreaDevicesResponse(info, areaDevices);
     }
+
 
     @Contract("_ -> new")
     private @NotNull DeviceInfo getDeviceInfo(@NotNull Device device) {
