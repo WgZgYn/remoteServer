@@ -3,10 +3,7 @@ package org.scu301.remoteserver.controller;
 import org.scu301.remoteserver.security.Claims;
 import org.scu301.remoteserver.service.SseConnectionService;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
@@ -37,7 +34,16 @@ public class SseController {
     public Flux<String> streamSse(@RequestAttribute("claims") Claims claims) {
         Integer accountId = claims.id();
         // 获取或创建用户的 Sink
-        Sinks.Many<String> sink = sseConnectionService.getUserSink(accountId);
-        return sink.asFlux();
+        return sseConnectionService.getUserSink(accountId).asFlux();
+    }
+
+    /**
+     * 关闭特定用户的所有 SSE 连接
+     */
+    @DeleteMapping("/disconnect")
+    public String disconnectUser(@RequestAttribute("claims") Claims claims) {
+        Integer accountId = claims.id();
+        sseConnectionService.closeUserConnections(accountId);
+        return "Disconnected all connections for user " + accountId;
     }
 }
